@@ -2,6 +2,6 @@ import { combineReducers } from 'redux';
 import app from './appReducer';
 
 const rootReducer = combineReducers({
-    app
+  app
 });
 export default rootReducer;

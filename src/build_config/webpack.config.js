@@ -1,4 +1,3 @@
-var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var autoprefixer = require('autoprefixer');
@@ -25,111 +24,102 @@ const settings = {
   development: {
     entry: [
       'webpack-dev-server/client?http://localhost:8080',
+      'babel-polyfill',
       './examples/index.js'
     ],
     output: {
-        publicPath: 'public/assets',
-        path: './public/assets',
-        filename: 'bundle.js',
+      publicPath: 'public/assets',
+      path: './public/assets',
+      filename: 'bundle.js',
     },
     devServer: {
-        contentBase: "public",
-        inline: true,
-        hot: true,
-        watch: true
-    }
+      contentBase: "public",
+      inline: true,
+      hot: true,
+      watch: true
+    },
+    devtool: "source-map"
   },
   production: {
     entry: [
+      'babel-polyfill',
       './src/index.js'
     ],
     output: {
       publicPath: 'lib',
       path: './lib',
-      filename: 'index.js'
+      filename: 'bundle.js'
     }
   }
-}
+};
 
 const plugins = {
   development: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
-    new webpack.ProvidePlugin({
-      React: 'react',
-      ReactDOM: 'react-dom'
-    }),
-    new webpack.DefinePlugin({
-      "process.env": {
-        NODE_ENV: JSON.stringify("development")
-      }
-    }),
     new ExtractTextPlugin("styles.css")
   ],
   production: [
     new webpack.NamedModulesPlugin(),
-    new webpack.ProvidePlugin({
-      React: 'react',
-      ReactDOM: 'react-dom'
-    })
+    new ExtractTextPlugin("styles.css")
   ]
-}
+};
 
 
 module.exports = Object.assign({
-      resolve: {
-          modulesDirectories: ["node_modules", "bower_components", "./frontend"],
-          extensions: ["", ".js", ".min.js", ".scss", ".css"]
+  resolve: {
+    modulesDirectories: ["node_modules", "bower_components", "./frontend"],
+    extensions: ["", ".js", ".min.js", ".scss", ".css"]
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.scss$/,
+        loader: ExtractTextPlugin.extract("css?modules&importLoaders=1&localIdentName=[name]__[local]!sass?sourceMap!postcss")
       },
-      module: {
-          loaders: [
-              {
-                  test: /\.scss$/,
-                  loader: ExtractTextPlugin.extract("css?sourceMap!sass?sourceMap!postcss")
-              },
-              {
-                test: /\.css$/,
-                loader: 'style!css?sourceMap'
-              },
-              {
-                  test: /\.(ttf|eot|woff|svg|jpe?g|gif|png)[\?]?.*$/,
-                  loader: 'file',
-                  query: {
-                      name: '[name][hash].[ext]',
-                      limit: 10000
-                  }
-              },
-              {
-                  test: /\.js$/,
-                  loader: "babel",
-                  exclude: [
-                      /node_modules/,
-                      /libs/,
-                      /vendor/,
-                      /bower_components/,
-                  ]
-              },
-              {
-                  test: /\.css$/,
-                  loader: "style!css?sourceMap",
-                  exclude: [
-                      /node_modules/,
-                      /libs/,
-                      /vendor/
-                  ]
-              }
-          ]
+      {
+        test: /\.css$/,
+        loader: 'style!css?sourceMap'
       },
-      sassLoader: {
-        sourceMapContents: true
+      {
+        test: /\.(ttf|eot|woff|svg|jpe?g|gif|png)[\?]?.*$/,
+        loader: 'file',
+        query: {
+          name: '[name][hash].[ext]',
+          limit: 10000
+        }
       },
-      postcss: () => [
-          autoprefixer(autoprefix),
-          postcssMergeRules,
-          postcssMergeLonghands,
-          postcssMergeIdents,
-          cssMqPacker,
-          postcssSvgGo,
-      ],
-      plugins: plugins[process.env.NODE_ENV]
-  },settings[process.env.NODE_ENV])
+      {
+        test: /\.js$/,
+        loader: "babel",
+        exclude: [
+          /node_modules/,
+          /libs/,
+          /vendor/,
+          /bower_components/,
+        ]
+      },
+      {
+        test: /\.css$/,
+        loader: "style!css?sourceMap",
+        exclude: [
+          /node_modules/,
+          /libs/,
+          /vendor/
+        ]
+      }
+    ]
+  },
+  sassLoader: {
+    sourceMapContents: true
+  },
+  postcss: () => [
+    autoprefixer(autoprefix),
+    postcssMergeRules,
+    postcssMergeLonghands,
+    postcssMergeIdents,
+    cssMqPacker,
+    postcssSvgGo,
+  ],
+  plugins: plugins[process.env.NODE_ENV]
+}, settings[process.env.NODE_ENV]);

@@ -1,0 +1,8 @@
+.container {
+  border-top: 1px solid red;
+  &--test {
+    composes: container;
+    border-top: 3px solid green;
+  }
+};
+

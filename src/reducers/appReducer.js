@@ -1,15 +1,16 @@
 import { EditorState } from 'draft-js';
+import { createReducer } from 'reduxsauce';
+const INITIAL_STATE = {
+  app: 'asd'
+};
+
 
 const editorState = EditorState.createEmpty();
-const INITIAL_STATE = {
 
-}
+const setState = (state, newState) => ({ ...state, ...newState });
 
-
-function setState(state, newState) {
-    return { ...state, ...newState };
-}
-
-export default (state = INITIAL_STATE, action) => {
-    return state;
+const handlers = {
+  ["Startup"]: setState
 };
+
+export default createReducer(INITIAL_STATE, handlers);
