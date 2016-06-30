@@ -18,6 +18,7 @@ export class StewieEditor extends Component {
   }
 
   changeState(editorState){
+    this.props.changeState(editorState);
     this.setState({ editorState });
   }
 

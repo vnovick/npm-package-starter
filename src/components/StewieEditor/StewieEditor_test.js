@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import expect from 'expect';
@@ -62,6 +63,10 @@ describe('(components/StewieEditor_test.js) - StewieEditor test', ()=>{
         expect(propsToCheck.stateKey).toExist();
         expect(propsToCheck.actions.length).toEqual(Object.keys(actions).length);
       });
+      it('should call "changeState" action on state change', ()=>{
+        wrapper.find(Editor).simulate('change', 'test text');
+        expect(testConfig.actions.changeState).toHaveBeenCalled()
+      })
     });
   });
 

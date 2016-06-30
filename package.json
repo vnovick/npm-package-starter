@@ -9,8 +9,7 @@
     "compile": "better-npm-run compile",
     "prepublish": "npm run compile",
     "test": "better-npm-run compile-test",
-    "clean-install": "rm -rf node_modules && npm i",
-    "ccov": "webpack --config ./src/build_config/webpack.config.js"
+    "clean-install": "rm -rf node_modules && npm i"
   },
   "betterScripts": {
     "watch-client": {
