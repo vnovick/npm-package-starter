@@ -9,7 +9,8 @@
     "compile": "better-npm-run compile",
     "prepublish": "npm run compile",
     "test": "better-npm-run compile-test",
-    "clean-install": "rm -rf node_modules && npm i"
+    "clean-install": "rm -rf node_modules && npm i",
+    "ccov": "webpack --config ./src/build_config/webpack.config.js"
   },
   "betterScripts": {
     "watch-client": {
@@ -60,6 +61,7 @@
     "mockery": "^1.7.0",
     "ramda": "^0.21.0",
     "react": "^15.1.0",
+    "react-autobind": "^1.0.6",
     "react-dom": "^15.1.0",
     "react-redux": "^4.4.5",
     "reactotron": "^0.6.1",
@@ -67,7 +69,8 @@
     "redux": "^3.5.2",
     "redux-saga": "^0.10.5",
     "reduxsauce": "^0.1.0",
-    "save-dev": "^2.0.0"
+    "save-dev": "^2.0.0",
+    "seamless-immutable": "^6.1.1"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.0",
@@ -92,6 +95,7 @@
     "mocha": "^2.5.3",
     "node-sass": "^3.7.0",
     "nodemon": "^1.9.2",
+    "plop": "^1.5.0",
     "postcss": "^5.0.21",
     "postcss-loader": "^0.9.1",
     "postcss-map-url": "^1.0.2",

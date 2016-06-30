@@ -2,19 +2,14 @@
 import { createReducer } from 'reduxsauce';
 import immutable from 'seamless-immutable';
 import Types from '../actions/types';
-const INITIAL_STATE = immutable({
-  init: false
-});
+const INITIAL_STATE = immutable({});
 
-
-// const editorState = EditorState.createEmpty();
-
-const setState = (state, action) => {
-  return state.merge({ init: action.init });
+const setState = (state, { editorState }) => {
+  return state.merge({ editorState });
 };
 
 export const handlers = {
-  [Types.STARTUP]: setState
+  [Types.EDITOR_CHANGE_STATE]: setState
 };
 
 export default createReducer(INITIAL_STATE, handlers);

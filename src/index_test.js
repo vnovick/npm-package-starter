@@ -23,7 +23,7 @@ describe('(index_test.js) - Basic Public Editor setup', ()=>{
   beforeEach(()=>{
     wrapper = shallow(<Editor/>);
   });
-  it('Stewie Editor is exposed wrapped in Provider', ()=>{
+  it('Stewie Editor is exposed and wrapped in Provider', ()=>{
     expect(wrapper.name()).toEqual('Provider');
   });
   it('Provider wrapper gets correct appStore', ()=>{
