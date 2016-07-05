@@ -6,9 +6,9 @@ import { isDev } from './config/debugSettings';
 import { redBoxComponent } from './utils/errorHandling';
 import { startup } from './actions/creators';
 
-function getEditor(){
+function getEditor(props){
   const Editor = <Provider store ={ appStore }>
-                    <StewieEditor/>
+                    <StewieEditor { ...props }/>
                   </Provider>;
   return isDev ? redBoxComponent(Editor) : Editor;
 }
@@ -16,7 +16,7 @@ function getEditor(){
 class EditorPublic extends React.Component {
 
   componentDidMount(){
-    appStore.dispatch(startup());
+    appStore.dispatch(startup(this.props));
   }
   render(){
     return getEditor();

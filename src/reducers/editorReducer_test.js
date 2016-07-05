@@ -2,6 +2,7 @@ import expect from 'expect';
 import editorReducer, { handlers } from './editorReducer';
 import immutable from 'seamless-immutable';
 import Types from '../actions/types';
+import { EditorState } from 'draft-js';
 import Editor from 'draft-js-plugins-editor-wysiwyg';
 
 describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
@@ -9,8 +10,9 @@ describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
     it('should be a function', ()=>{
       expect(editorReducer).toNotBeAn('Function');
     });
-    it('should return immutable state', ()=>{
-      expect(editorReducer()).toIncludeKey('__immutable_invariants_hold');
+    it('should return draft-js EditorState for editorState prop', ()=>{
+      expect(editorReducer()).toIncludeKey('editorState');
+      expect(editorReducer().editorState.constructor).toBe(EditorState)
     });
     it('all handler types are defined', ()=> {
       expect(Object.keys(handlers).includes('undefined')).toNotExist("there are undefined handler types");
@@ -30,6 +32,21 @@ describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
         })
       };
       expect(editorReducer(INITIAL_STATE, { type: Types.EDITOR_CHANGE_STATE, ...newState })).toEqual({ editorState: { test: true } });
+    });
+  });
+  describe('"EDITOR_TRANSFORM_TO_RAW_STATE" action', ()=> {
+    let INITIAL_STATE;
+    beforeEach(()=>{
+      INITIAL_STATE = immutable({});
+    });
+
+    it('should update editor "json" key', () => {
+      const newState = {
+        json: {
+          test: true
+        }
+      };
+      expect(editorReducer(INITIAL_STATE, { type: Types.EDITOR_TRANSFORM_TO_RAW_STATE, ...newState })).toEqual({ json: { test: true } });
     });
   });
 });

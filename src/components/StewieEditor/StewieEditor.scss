@@ -1,8 +1,14 @@
+@import "../../common_styles/colors";
+
 .container {
-  border-top: 1px solid red;
-  &--test {
-    composes: container;
-    border-top: 3px solid green;
-  }
+  border: 1px solid $grey;
 };
 
+.editor {
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: rgb(204, 204, 204);
+  cursor: text;
+  min-height: 80px;
+  padding: 10px;
+}

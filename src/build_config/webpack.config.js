@@ -25,7 +25,7 @@ const settings = {
     entry: [
       'webpack-dev-server/client?http://localhost:8080',
       'babel-polyfill',
-      './examples/index.js'
+      './examples/index.js',
     ],
     output: {
       publicPath: 'public/assets',
@@ -53,16 +53,18 @@ const settings = {
   }
 };
 
+const commonPlugins = [
+  new webpack.NamedModulesPlugin(),
+  new ExtractTextPlugin("styles.css"),
+  new webpack.EnvironmentPlugin(['NODE_ENV'])
+];
+
 const plugins = {
   development: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(),
-    new ExtractTextPlugin("styles.css")
+    ...commonPlugins
   ],
-  production: [
-    new webpack.NamedModulesPlugin(),
-    new ExtractTextPlugin("styles.css")
-  ]
+  production: commonPlugins
 };
 
 
@@ -76,10 +78,6 @@ module.exports = Object.assign({
       {
         test: /\.scss$/,
         loader: ExtractTextPlugin.extract("css?modules&importLoaders=1&localIdentName=[name]__[local]!sass?sourceMap!postcss")
-      },
-      {
-        test: /\.css$/,
-        loader: 'style!css?sourceMap'
       },
       {
         test: /\.(ttf|eot|woff|svg|jpe?g|gif|png)[\?]?.*$/,

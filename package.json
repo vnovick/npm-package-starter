@@ -9,6 +9,7 @@
     "compile": "better-npm-run compile",
     "prepublish": "npm run compile",
     "test": "better-npm-run compile-test",
+    "test-full": "better-npm-run compile-test-full",
     "clean-install": "rm -rf node_modules && npm i"
   },
   "betterScripts": {
@@ -19,7 +20,14 @@
       }
     },
     "compile-test": {
-      "command": "webpack --config ./src/build_config/webpack.config.js && mocha $(find src -name '*_test.js' ! -ipath '*node_modules*') --watch --recursive src/ --compilers js:babel-core/register",
+      "command": "webpack --config ./src/build_config/webpack.config.js --progress --colors && mocha $(find src -name '*_test.js' ! -ipath '*node_modules*') --watch --recursive --reporter dot src/ --compilers js:babel-core/register",
+      "env": {
+        "NODE_ENV": "production",
+        "BABEL_ENV": "test"
+      }
+    },
+    "compile-test-full": {
+      "command": "webpack --config ./src/build_config/webpack.config.js --progress --colors && mocha $(find src -name '*_test.js' ! -ipath '*node_modules*') --watch --recursive src/ --compilers js:babel-core/register",
       "env": {
         "NODE_ENV": "production",
         "BABEL_ENV": "test"
@@ -61,6 +69,7 @@
     "ramda": "^0.21.0",
     "react": "^15.1.0",
     "react-autobind": "^1.0.6",
+    "react-css-modules": "^3.7.7",
     "react-dom": "^15.1.0",
     "react-redux": "^4.4.5",
     "reactotron": "^0.6.1",
@@ -104,6 +113,7 @@
     "postcss-svgo": "^2.1.3",
     "react-addons-test-utils": "^15.1.0",
     "redux-logger": "^2.6.1",
+    "redux-saga-test-plan": "0.0.2",
     "sass-loader": "^3.2.0",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1"

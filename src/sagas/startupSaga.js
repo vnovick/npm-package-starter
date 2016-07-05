@@ -1,8 +1,18 @@
 // process STARTUP actions
 import { take, put, select } from 'redux-saga/effects';
 import Types from '../actions/types';
+import { changeState } from '../actions/creators';
+import { EditorState, convertFromRaw } from 'draft-js';
 
 export function * watchStartup() {
-  yield take(Types.STARTUP);
-  console.info("%c Startup - override *watchStartup in startupSaga if you need some custom startup logic", 'color: green');
+  const action = yield take(Types.STARTUP);
+  if (action.config && action.config.initialState) {
+    yield put(
+      changeState(
+        EditorState.createWithContent(
+          convertFromRaw(action.config.initialState)
+        )
+      )
+    );
+  }
 }

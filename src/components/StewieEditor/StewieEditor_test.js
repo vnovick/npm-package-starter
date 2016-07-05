@@ -2,13 +2,20 @@ import 'babel-polyfill';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import expect from 'expect';
-import StewieEditorComponent, { StewieEditor, editorClassName } from '.';
+import StewieEditorComponent, { StewieEditor, stewieClassNames } from '.';
 import Editor from 'draft-js-plugins-editor-wysiwyg';
 import { OrderedSet } from 'immutable';
 import appStore from '../../appStore';
+import { EditorState, RichUtils } from 'draft-js';
 const expectedValues = {
   rendering: {
-    editorClassName
+    stewieClassNames
+  }
+};
+
+const reduxConnectionMock = {
+  editor: {
+    editorState: EditorState.createEmpty()
   }
 };
 
@@ -18,13 +25,16 @@ const testConfig = {
   },
   stateKey: 'editor',
   get shallowComponent() {
-    return shallow(<StewieEditor { ...this.actions }/>);
+    return shallow(<StewieEditor { ...this.actions } { ...reduxConnectionMock }/>);
   },
   get realComponent(){
-    return mount(<StewieEditor { ...this.actions }/>);
+    return mount(<StewieEditor { ...this.actions } { ...reduxConnectionMock }/>);
   },
   get connectedComponent(){
     return shallow(<StewieEditorComponent store={ appStore }/>).find(StewieEditor);
+  },
+  get realConnectedComponent(){
+    return mount(<StewieEditorComponent { ...this.actions } store={ appStore }/>).find(StewieEditor);
   }
 };
 
@@ -35,23 +45,33 @@ describe('(components/StewieEditor_test.js) - StewieEditor test', ()=>{
   });
 
   describe('Basic Rendering', ()=>{
-    const { editorClassName: className } = expectedValues.rendering;
-    it('should import correct className', ()=>{
-      expect(className).toExist();
-      expect(wrapper.props().className).toEqual(className);
+    const { stewieClassNames: { container: containerClassName, editor: editorClassName } } = expectedValues.rendering;
+    it('should have correct container className', ()=>{
+      expect(containerClassName).toExist();
+      expect(wrapper.props().className).toEqual(containerClassName);
+    });
+
+    it('should have correct editor className', ()=>{
+      expect(editorClassName).toExist();
+      expect(wrapper.find(Editor).props().className).toEqual(editorClassName);
+    });
+
+    it(`should have ${testConfig.stateKey} prop`, ()=>{
+      const { realComponent, stateKey } = testConfig;
+      expect(realComponent.props()[stateKey]).toExist();
     });
 
     it('should have correct editorState from draft-js', ()=>{
-      expect(wrapper.state()).toExist();
-      expect(wrapper.state()).toIncludeKey('editorState');
+      expect(wrapper.find(Editor).props().editorState).toExist();
+      expect(wrapper.find(Editor).props().editorState).toBeA(EditorState);
     });
 
     it('should contain draft-js-plugins-editor-wysiwyg Editor component', ()=> {
       expect(wrapper.find(Editor).length).toBe(1, "Editor component should be rendered inside StewieEditor");
     });
 
-    describe('Check react-redux bindings',()=>{
-      it('check container wrapper for relevant actions and statekey',()=>{
+    describe('Check react-redux bindings', ()=>{
+      it('check container wrapper for relevant actions and statekey', ()=>{
         const { stateKey, actions, connectedComponent } = testConfig;
         const componentProps = connectedComponent.props();
         const propsToCheck = {
@@ -64,9 +84,11 @@ describe('(components/StewieEditor_test.js) - StewieEditor test', ()=>{
         expect(propsToCheck.actions.length).toEqual(Object.keys(actions).length);
       });
       it('should call "changeState" action on state change', ()=>{
-        wrapper.find(Editor).simulate('change', 'test text');
+        const changeStateAction = expect.createSpy();
+        const stewieWrapper = shallow(<StewieEditor changeState={changeStateAction} { ...reduxConnectionMock }/>)
+        stewieWrapper.find(Editor).simulate('change', 'test text');
         expect(testConfig.actions.changeState).toHaveBeenCalled()
-      })
+      });
     });
   });
 
@@ -79,10 +101,12 @@ describe('(components/StewieEditor_test.js) - StewieEditor test', ()=>{
       it('should have changeState method', ()=>{
         expect(wrapper.instance().changeState).toExist();
       });
-      it('should change StewieEditor state when typing in inner <Editor/>', ()=>{
-        wrapper.find(Editor).simulate('change', 'test text');
-        expect(wrapper.state().editorState).toBe('test text');
-      })
+      it('should trigger StewieEditor change state action when typing in inner <Editor/>', ()=>{
+        const changeStateAction = expect.createSpy();
+        const stewieWrapper = shallow(<StewieEditor changeState={ changeStateAction } { ...reduxConnectionMock }/>);
+        stewieWrapper.find(Editor).simulate('change', 'test text');
+        expect(changeStateAction).toHaveBeenCalled();
+      });
     });
 
     describe('handleKeyCommand prop - method', ()=>{
@@ -93,23 +117,22 @@ describe('(components/StewieEditor_test.js) - StewieEditor test', ()=>{
       it('should have handleKeyCommand method', ()=>{
         expect(wrapper.instance().changeState).toExist();
       });
-      it('handleKeyCommand method should change editor state correctly',()=>{
+      it('handleKeyCommand method should call changeState action three times and should get correct state from RichUtils',()=>{
+        let calledStateResults = [];
+        const changeStateAction = (editorState) => {
+          calledStateResults.push(editorState._immutable.inlineStyleOverride);
+        };
+        const stewieWrapper = shallow(<StewieEditor changeState={ changeStateAction } { ...reduxConnectionMock }/>);
         const commands = [
           'bold', 'italic', 'underline'
-        ]
-        const hasAnyErrorOnCommandInvocation = commands.map(command =>
-          wrapper.instance().handleKeyCommand(command)
-        )
+        ];
+        commands.map(command => {
+          stewieWrapper.instance().handleKeyCommand(command);
+        });
 
-        const expectedInlineStyleOverride = OrderedSet.fromKeys(commands.reduce((acc, value)=>{
-          return {
-            ...acc,
-            [value.toUpperCase()]: value.toUpperCase()
-          }
-        }, {}))
-        expect(wrapper.state().editorState._immutable.inlineStyleOverride).toEqual(expectedInlineStyleOverride);
-      })
+        const expectedInlineStyleOverride = commands.map(command => OrderedSet.fromKeys({ [command.toUpperCase()]: command.toUpperCase()}))
+        expect(calledStateResults).toEqual(expectedInlineStyleOverride);
+      });
     });
   });
-
 });
