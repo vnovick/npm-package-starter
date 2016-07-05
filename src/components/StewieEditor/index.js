@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styles from './StewieEditor.scss';
 import Editor from 'draft-js-plugins-editor-wysiwyg';
-import { RichUtils, convertFromRaw } from 'draft-js';
+import { RichUtils } from 'draft-js';
 import autoBind from 'react-autobind';
 import { connect } from 'react-redux';
 import { changeState } from '../../actions/creators';
@@ -34,8 +34,8 @@ export class StewieEditor extends Component {
       <div className={ stewieClassNames.container }>
         <div className={ stewieClassNames.editor }>
           <Editor editorState={ this.props.editor.editorState }
-            onChange={ this.changeState.bind(this) }
-            handleKeyCommand={ this.handleKeyCommand.bind(this) } className={ stewieClassNames.editor }
+            onChange={ this.changeState }
+            handleKeyCommand={ this.handleKeyCommand }
           />
         </div>
       </div>

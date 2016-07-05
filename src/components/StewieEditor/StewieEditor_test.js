@@ -51,9 +51,9 @@ describe('(components/StewieEditor_test.js) - StewieEditor test', ()=>{
       expect(wrapper.props().className).toEqual(containerClassName);
     });
 
-    it('should have correct editor className', ()=>{
+    it('should have correct editor className wrapper', ()=>{
       expect(editorClassName).toExist();
-      expect(wrapper.find(Editor).props().className).toEqual(editorClassName);
+      expect(wrapper.find(`.${editorClassName}`).at(0).shallow()).toExist();
     });
 
     it(`should have ${testConfig.stateKey} prop`, ()=>{

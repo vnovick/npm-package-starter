@@ -1,6 +1,5 @@
 // import { EditorState } from 'draft-js';
 import { createReducer } from 'reduxsauce';
-import immutable from 'seamless-immutable';
 import Types from '../actions/types';
 import { EditorState } from 'draft-js';
 
@@ -12,14 +11,14 @@ const setState = (state, { editorState }) => {
   return {
     ...state,
     editorState
-  }
+  };
 };
 
 const setJsonState = (state, { json }) => {
   return {
     ...state,
     json
-  }
+  };
 };
 
 export const handlers = {
