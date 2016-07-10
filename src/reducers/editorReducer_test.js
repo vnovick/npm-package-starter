@@ -49,4 +49,19 @@ describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
       expect(editorReducer(INITIAL_STATE, { type: Types.EDITOR_TRANSFORM_TO_RAW_STATE, ...newState })).toEqual({ json: { test: true } });
     });
   });
+  describe('"CONFIGURE_TOOLBAR" action', ()=> {
+    let INITIAL_STATE;
+    beforeEach(()=>{
+      INITIAL_STATE = immutable({});
+    });
+
+    it('should update editor "json" key', () => {
+      const newState = {
+        buttonsConfig: {
+          test: true
+        }
+      };
+      expect(editorReducer(INITIAL_STATE, { type: Types.CONFIGURE_TOOLBAR, ...newState })).toEqual({ buttonsConfig: { test: true } });
+    });
+  });
 });

@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import expect from 'expect';
-import { startup, changeState, transformState } from './creators';
+import { startup, changeState, transformState, configureToolbar } from './creators';
 import Types from './types';
 describe('(actions/creators_test.js) - action creators test', ()=>{
   describe('Startup Action Creator', ()=>{
@@ -29,6 +29,20 @@ describe('(actions/creators_test.js) - action creators test', ()=>{
       expect(action.editorState).toBe(configObj);
     });
   });
+  describe('configureToolbar Action Creator', ()=>{
+    it('should exist', ()=>{
+      expect(configureToolbar).toExist(" configureToolbar Action creator undefined ");
+    });
+    it('should be of correct type', ()=>{
+      const action = configureToolbar();
+      expect(action.type).toBe(Types.CONFIGURE_TOOLBAR);
+    });
+    it('should return configuration object if passed', ()=>{
+      const passedConfig = { buttonsConfig: {}, buttonsList: [] };
+      const action = configureToolbar(passedConfig);
+      expect(action.buttonsConfig).toBe(passedConfig);
+    });
+  });
   describe('transformState Action Creator', ()=>{
     let action;
     let configObj = { json: {} };
@@ -42,4 +56,5 @@ describe('(actions/creators_test.js) - action creators test', ()=>{
       expect(action.json).toBe(configObj);
     });
   });
+
 });

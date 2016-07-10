@@ -2,11 +2,12 @@ import 'babel-polyfill';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import expect from 'expect';
-import StewieEditorComponent, { StewieEditor, stewieClassNames } from '.';
+import StewieEditorComponent, { StewieEditor, stewieClassNames, blockRenderMap } from '.';
 import Editor from 'draft-js-plugins-editor-wysiwyg';
 import { OrderedSet } from 'immutable';
 import appStore from '../../appStore';
-import { EditorState, RichUtils } from 'draft-js';
+import { EditorState } from 'draft-js';
+import Toolbar from '../Toolbar';
 const expectedValues = {
   rendering: {
     stewieClassNames
@@ -15,13 +16,14 @@ const expectedValues = {
 
 const reduxConnectionMock = {
   editor: {
-    editorState: EditorState.createEmpty()
+    editorState: EditorState.createEmpty(),
   }
 };
 
 const testConfig = {
   actions: {
-    changeState: expect.createSpy()
+    changeState: expect.createSpy(),
+    configureToolbar: expect.createSpy()
   },
   stateKey: 'editor',
   get shallowComponent() {
@@ -38,7 +40,7 @@ const testConfig = {
   }
 };
 
-describe('(components/StewieEditor_test.js) - StewieEditor test', ()=>{
+describe('(components/StewieEditor/StewieEditor_test.js) - StewieEditor test', ()=>{
   let wrapper;
   beforeEach(()=>{
     wrapper = testConfig.shallowComponent;
@@ -53,7 +55,11 @@ describe('(components/StewieEditor_test.js) - StewieEditor test', ()=>{
 
     it('should have correct editor className wrapper', ()=>{
       expect(editorClassName).toExist();
-      expect(wrapper.find(`.${editorClassName}`).at(0).shallow()).toExist();
+      expect(wrapper.find(`.${editorClassName}`).length).toEqual(1, `${editorClassName} wrapper is not surrounding draft-js editor`);
+    });
+
+    it('should have toolbar', ()=>{
+      expect(wrapper.find(Toolbar).length).toEqual(1, "Toolbar component is not inside StewieEditor");
     });
 
     it(`should have ${testConfig.stateKey} prop`, ()=>{
@@ -64,6 +70,21 @@ describe('(components/StewieEditor_test.js) - StewieEditor test', ()=>{
     it('should have correct editorState from draft-js', ()=>{
       expect(wrapper.find(Editor).props().editorState).toExist();
       expect(wrapper.find(Editor).props().editorState).toBeA(EditorState);
+    });
+
+    it('should have correct blockRendererFn Function prop', ()=>{
+      expect(wrapper.find(Editor).props().blockRendererFn).toExist();
+      expect(wrapper.find(Editor).props().blockRendererFn).toBeA(Function);
+    });
+
+    it('should have correct blockRenderMap prop', ()=>{
+      expect(wrapper.find(Editor).props().blockRenderMap).toExist();
+      expect(wrapper.find(Editor).props().blockRenderMap).toEqual(blockRenderMap);
+    });
+
+
+    it('blockRenderMap should support hr custom block', ()=>{
+      expect(blockRenderMap.get('hr')).toExist();
     });
 
     it('should contain draft-js-plugins-editor-wysiwyg Editor component', ()=> {
@@ -77,17 +98,17 @@ describe('(components/StewieEditor_test.js) - StewieEditor test', ()=>{
         const propsToCheck = {
           stateKey: connectedComponent.props()[stateKey],
           actions: Object.keys(actions).filter((action)=>{
-            return typeof componentProps[action] === 'function'
+            return typeof componentProps[action] === 'function';
           })
-        }
+        };
         expect(propsToCheck.stateKey).toExist();
         expect(propsToCheck.actions.length).toEqual(Object.keys(actions).length);
       });
       it('should call "changeState" action on state change', ()=>{
         const changeStateAction = expect.createSpy();
-        const stewieWrapper = shallow(<StewieEditor changeState={changeStateAction} { ...reduxConnectionMock }/>)
+        const stewieWrapper = shallow(<StewieEditor changeState={ changeStateAction } { ...reduxConnectionMock }/>);
         stewieWrapper.find(Editor).simulate('change', 'test text');
-        expect(testConfig.actions.changeState).toHaveBeenCalled()
+        expect(testConfig.actions.changeState).toHaveBeenCalled();
       });
     });
   });
@@ -95,7 +116,7 @@ describe('(components/StewieEditor_test.js) - StewieEditor test', ()=>{
   describe('prop-method required couples on <Editor/> and <StewieEditor/> wrapper', ()=>{
     describe('onChange prop - changeState method', ()=>{
       it('should have onChange prop on inner editor', ()=>{
-        const { realComponent: realEditor } = testConfig
+        const { realComponent: realEditor } = testConfig;
         expect(realEditor.find(Editor).props().onChange).toExist();
       });
       it('should have changeState method', ()=>{
@@ -111,13 +132,13 @@ describe('(components/StewieEditor_test.js) - StewieEditor test', ()=>{
 
     describe('handleKeyCommand prop - method', ()=>{
       it('should have handleKeyCommand prop', ()=>{
-        const { realComponent: realEditor } = testConfig
+        const { realComponent: realEditor } = testConfig;
         expect(realEditor.find(Editor).props().handleKeyCommand).toExist();
       });
       it('should have handleKeyCommand method', ()=>{
         expect(wrapper.instance().changeState).toExist();
       });
-      it('handleKeyCommand method should call changeState action three times and should get correct state from RichUtils',()=>{
+      it('handleKeyCommand method should call changeState action three times and should get correct state from RichUtils', ()=>{
         let calledStateResults = [];
         const changeStateAction = (editorState) => {
           calledStateResults.push(editorState._immutable.inlineStyleOverride);
@@ -130,7 +151,7 @@ describe('(components/StewieEditor_test.js) - StewieEditor test', ()=>{
           stewieWrapper.instance().handleKeyCommand(command);
         });
 
-        const expectedInlineStyleOverride = commands.map(command => OrderedSet.fromKeys({ [command.toUpperCase()]: command.toUpperCase()}))
+        const expectedInlineStyleOverride = commands.map(command => OrderedSet.fromKeys({ [command.toUpperCase()]: command.toUpperCase() }));
         expect(calledStateResults).toEqual(expectedInlineStyleOverride);
       });
     });

@@ -11,3 +11,8 @@ export const transformState = (json) => ({
   type: Types.EDITOR_TRANSFORM_TO_RAW_STATE,
   json
 });
+
+export const configureToolbar = (buttonsConfig) => ({
+  type: Types.CONFIGURE_TOOLBAR,
+  buttonsConfig
+});

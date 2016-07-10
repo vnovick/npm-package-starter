@@ -1,0 +1,25 @@
+.simple, .menu {
+  background-color: #FFF;
+  color: #999;
+  display: block;
+  cursor: pointer;
+  padding: 5px 0;
+  width: 2rem;
+  border: 0;
+  font-size: 1rem;
+  text-align: center;
+  &--active {
+    background-color: #5890ff;
+    color: #FFFFFF;
+  }
+}
+
+.menu {
+  margin: 10px;
+  padding: 0;
+  width: auto;
+  &--active {
+    background-color: transparent;
+    color: #5890ff;
+  }
+}

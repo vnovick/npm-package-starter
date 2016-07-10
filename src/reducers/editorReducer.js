@@ -21,9 +21,18 @@ const setJsonState = (state, { json }) => {
   };
 };
 
+const setToolbarConfig = (state, { buttonsConfig }) => {
+  console.log(buttonsConfig)
+  return {
+    ...state,
+    buttonsConfig
+  };
+};
+
 export const handlers = {
   [Types.EDITOR_CHANGE_STATE]: setState,
-  [Types.EDITOR_TRANSFORM_TO_RAW_STATE]: setJsonState
+  [Types.EDITOR_TRANSFORM_TO_RAW_STATE]: setJsonState,
+  [Types.CONFIGURE_TOOLBAR]: setToolbarConfig
 };
 
 export default createReducer(INITIAL_STATE, handlers);
