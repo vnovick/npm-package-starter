@@ -14,7 +14,7 @@ const setState = (state, action) => {
 };
 
 export const handlers = {
-  [Types.STARTUP]: setState
+  [Types.INIT]: setState
 };
 
 export default createReducer(INITIAL_STATE, handlers);

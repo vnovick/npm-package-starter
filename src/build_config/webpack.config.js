@@ -70,14 +70,15 @@ const plugins = {
 
 module.exports = Object.assign({
   resolve: {
-    modulesDirectories: ["node_modules", "bower_components", "./frontend"],
+    modulesDirectories: ["node_modules", "bower_components", "./src"],
     extensions: ["", ".js", ".min.js", ".scss", ".css"]
   },
+  cache: false,
   module: {
     loaders: [
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract("css?modules&importLoaders=1&localIdentName=[name]__[local]!sass?sourceMap!postcss")
+        loader: ExtractTextPlugin.extract("css?modules&localIdentName=[name]__[local]__[hash]!sass?sourceMap!postcss")
       },
       {
         test: /\.(ttf|eot|woff|svg|jpe?g|gif|png)[\?]?.*$/,

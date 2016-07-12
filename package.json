@@ -95,6 +95,7 @@
     "core-js": "^2.4.0",
     "css-loader": "^0.23.1",
     "css-mqpacker": "^5.0.1",
+    "decache": "^3.1.0",
     "draft-js-plugins-editor-wysiwyg": "^1.0.3",
     "enzyme": "^2.3.0",
     "es6-shim": "^0.35.1",

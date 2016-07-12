@@ -6,7 +6,7 @@ import Toolbar, { toolbarClassNames } from '.';
 import StewieEditorComponent, { StewieEditor } from '../StewieEditor';
 import appStore from '../../appStore';
 import { defaultButtonsConfig } from './config';
-import { EditorState, RichUtils } from 'draft-js';
+import { EditorState } from 'draft-js';
 const expectedValues = {
   rendering: {
     toolbarClassNames
@@ -16,6 +16,9 @@ const expectedValues = {
 const reduxConnectionMock = {
   editor: {
     editorState: EditorState.createEmpty()
+  },
+  app: {
+    init: true
   }
 };
 //
@@ -36,9 +39,8 @@ describe('(components/Toolbar/Toolbar_test.js) - Toolbar test', ()=>{
   let toolbar;
   beforeEach(()=>{
     wrapper = testConfig.shallowContainer.find(Toolbar).shallow();
-    toolbar = shallow(<Toolbar/>)
+    toolbar = shallow(<Toolbar/>);
   });
-
   describe('Basic Rendering', ()=>{
     const { toolbarClassNames: { container: containerClassName } } = expectedValues.rendering;
     it('should have correct container className', ()=>{
@@ -46,7 +48,7 @@ describe('(components/Toolbar/Toolbar_test.js) - Toolbar test', ()=>{
       expect(wrapper.props().className).toEqual(containerClassName);
     });
     it('should have alignmentToggle, linkToggle, blockToggle and inlineToggle functions', ()=>{
-      expect(toolbar.instance()).toIncludeKeys(['alignmentToggle', 'linkToggle', 'inlineToggle', 'blockToggle']);
+      expect(toolbar.instance()).toIncludeKeys(['alignmentToggle', 'inlineToggle', 'blockToggle']);
     });
   });
 
@@ -72,6 +74,7 @@ describe('(components/Toolbar/Toolbar_test.js) - Toolbar test', ()=>{
         mount(
           <StewieEditor { ...testConfig.editorActions }
             configureToolbar={ configureToolbar }
+            app={ { init: true } }
             editor={ {
               editorState: EditorState.createEmpty()
             } }
@@ -89,7 +92,7 @@ describe('(components/Toolbar/Toolbar_test.js) - Toolbar test', ()=>{
       describe('check changeState action is thrown when executing onToggle with Editor State', ()=>{
         it('should throw changeState action', () =>{
           const changeStateSpy = expect.createSpy();
-          const container = shallow(<StewieEditor changeState={ changeStateSpy } editor={ { editorState: EditorState.createEmpty() } } />);
+          const container = shallow(<StewieEditor app={ { init: true } } changeState={ changeStateSpy } editor={ { editorState: EditorState.createEmpty() } } />);
           container.find(Toolbar).props().onToggle(EditorState.createEmpty());
           expect(changeStateSpy).toHaveBeenCalled();
         });
@@ -116,21 +119,13 @@ describe('(components/Toolbar/Toolbar_test.js) - Toolbar test', ()=>{
           getToolbar(inlineToggle).instance().inlineToggle('BOLD');
           expect(inlineToggle.calls[0].arguments[0].constructor).toBe(EditorState);
         });
-        xit('alignmentToggle function should exist', ()=>{
+        it('alignmentToggle function should exist', ()=>{
           expect(getToolbar(expect.createSpy()).instance().alignmentToggle).toExist();
         });
-        xit('alignmentToggle should return EditorState', ()=>{
+        it('alignmentToggle should return EditorState', ()=>{
           let alignmentToggle = expect.createSpy();
           getToolbar(alignmentToggle).instance().alignmentToggle('unordered-list-item');
           expect(alignmentToggle.calls[0].arguments[0].constructor).toBe(EditorState);
-        });
-        xit('linkToggle function should exist', ()=>{
-          expect(getToolbar(expect.createSpy()).instance().linkToggle).toExist();
-        });
-        xit('linkToggle should return EditorState', ()=>{
-          let linkToggle = expect.createSpy();
-          getToolbar(linkToggle).instance().linkToggle('unordered-list-item');
-          expect(linkToggle.calls[0].arguments[0].constructor).toBe(EditorState);
         });
         it('hrToggle function should exist', ()=>{
           expect(getToolbar(expect.createSpy()).instance().customBlockToggle).toExist();

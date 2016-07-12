@@ -29,7 +29,7 @@ describe('(reducers/appReducer_test.js) - appReducer test', ()=>{
       const newState = {
         init: true
       };
-      expect(appReducer(INITIAL_STATE, { type: Types.STARTUP, ...newState })).toEqual({ init: true });
+      expect(appReducer(INITIAL_STATE, { type: Types.INIT, ...newState })).toEqual({ init: true });
     });
   });
 });

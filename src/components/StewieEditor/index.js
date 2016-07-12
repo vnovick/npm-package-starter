@@ -6,12 +6,9 @@ import autoBind from 'react-autobind';
 import { connect } from 'react-redux';
 import { changeState, configureToolbar } from '../../actions/creators';
 import Toolbar from '../Toolbar';
-import createFocusPlugin from 'draft-js-focus-plugin';
-export const stewieClassNames = styles;
-export const plugins = [
-  createFocusPlugin({})
-];
+import { LinkAccordion, linkPlugin } from '../Link';
 
+export const stewieClassNames = styles;
 
 export function customBlockRender(contentBlock, { getEditorState, setEditorState }) {
   const type = contentBlock.getType();
@@ -24,22 +21,41 @@ export function customBlockRender(contentBlock, { getEditorState, setEditorState
   return null;
 }
 
+export const blockStyleFn = (contentBlock) => {
+  const type = contentBlock.getType();
+  return stewieClassNames[`blockType__${type}`];
+};
+
 export const blockRenderMap = DefaultDraftBlockRenderMap.merge({
   hr: {},
+  'alignment--left': {
+    element: 'div'
+  },
+  'alignment--center': {
+    element: 'div'
+  },
+  'alignment--right': {
+    element: 'div'
+  }
 });
+
+export const plugins = [
+  linkPlugin()
+];
 
 export class StewieEditor extends Component {
 
   constructor(props){
     super(props);
+    this.state = {
+      showLinkAccordion: false,
+      urlValue: ''
+    };
     autoBind(this);
   }
 
   changeState(editorState){
     this.props.changeState(editorState);
-    this.setState({
-      editorState
-    });
   }
 
   handleKeyCommand(command){
@@ -55,29 +71,46 @@ export class StewieEditor extends Component {
     this.changeState(editorState);
   }
 
+  renderLinkIfisInToolbar(editorState){
+    const { showLinkAccordion, urlValue } = this.state;
+    if (showLinkAccordion) {
+      return <LinkAccordion editorFocus={ () => { this.refs.editor.focus(); } } editorState={ editorState } urlValue={ urlValue } changeState={ this.linkChangeState }
+        onConfirm={ this.toggleToolbarButton }/>;
+    }
+    return false;
+  }
+
+  linkChangeState(linkState){
+    this.setState(linkState);
+  }
 
   render(){
-    const { editor: { buttonsConfig }, editor: { editorState } } = this.props;
+    const { editor: { buttonsConfig, editorState }, app: { init } } = this.props;
     return (
       <div className={ stewieClassNames.container }>
-        <Toolbar onToggle={ this.toggleToolbarButton } configureToolbar={ this.props.configureToolbar }
+        <Toolbar linkToggle={ this.linkChangeState } onToggle={ this.toggleToolbarButton }
+          configureToolbar={ this.props.configureToolbar }
           buttonsConfig={ buttonsConfig } editorState={ editorState }
         />
+      { this.renderLinkIfisInToolbar(editorState) }
       <div className={ stewieClassNames.editor }>
-          <Editor editorState={ editorState }
-            blockRendererFn={ customBlockRender }
-            blockRenderMap={ blockRenderMap }
-            onChange={ this.changeState }
-            handleKeyCommand={ this.handleKeyCommand }
-            ref="editor"
-            plugins={ plugins }
-          />
+         { init ?
+           <Editor editorState={ editorState }
+             blockStyleFn={ blockStyleFn }
+             blockRendererFn={ customBlockRender }
+             blockRenderMap={ blockRenderMap }
+             onChange={ this.changeState }
+             handleKeyCommand={ this.handleKeyCommand }
+             ref="editor"
+             plugins={ plugins }
+           />
+           : false }
         </div>
       </div>
     );
   }
 }
 
-export default connect(({ editor })=>({ editor }), { changeState, configureToolbar })(StewieEditor);
+export default connect(({ editor, app })=>({ editor, app }), { changeState, configureToolbar })(StewieEditor);
 
 

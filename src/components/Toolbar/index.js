@@ -1,13 +1,15 @@
+import 'core-js';
 import React from 'react';
 import styles from './toolbar.scss';
 import addBlock from 'draft-js-dnd-plugin/lib/modifiers/addBlock.js';
 import { defaultButtonsConfig } from './config';
 import { validateButtonsConfig } from './utils/configUtils';
-import 'core-js';
-import { RichUtils } from 'draft-js';
+import { RichUtils, EditorState, Modifier } from 'draft-js';
 import autoBind from 'react-autobind';
 import { Button } from '../Button';
+
 export const toolbarClassNames = styles;
+
 function populateToolbarButtons(config, toggleControls, isActive, isMenuButton){
   const { buttonsList, buttonsConf } = config;
   return buttonsList.map((button) => {
@@ -36,10 +38,14 @@ function validateAndPopulateButtons(config, toggleControls, isButtonActive){
   return false;
 }
 
+
 class Toolbar extends React.Component {
 
   constructor(props){
     super(props);
+    this.state = {
+      showLinkAccordion: false,
+    };
     autoBind(this);
   }
 
@@ -49,11 +55,25 @@ class Toolbar extends React.Component {
   }
 
   alignmentToggle(blockType){
-    console.log('alignment', blockType)
+    const { editorState, onToggle } = this.props;
+    const contentState = editorState.getCurrentContent();
+    const selectionState = editorState.getSelection();
+    onToggle(EditorState.push(editorState, Modifier.setBlockType(contentState, selectionState, `alignment--${blockType}`)));
   }
+
   linkToggle(blockType){
-    console.log('link', blockType)
+    const { linkToggle, editorState, onToggle } = this.props;
+    if (blockType === 'remove') {
+      const selection = editorState.getSelection();
+      if (!selection.isCollapsed()) {
+        onToggle(RichUtils.toggleLink(editorState, selection, null));
+      }
+    }
+    if (blockType === 'add') {
+      linkToggle({ showLinkAccordion: true });
+    }
   }
+
 
   customBlockToggle(blockType){
     const { editorState, onToggle } = this.props;
@@ -100,4 +120,4 @@ class Toolbar extends React.Component {
   }
 }
 
-export default Toolbar
+export default Toolbar;

@@ -2,12 +2,14 @@ import 'babel-polyfill';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import expect from 'expect';
-import StewieEditorComponent, { StewieEditor, stewieClassNames, blockRenderMap } from '.';
+import StewieEditorComponent, { StewieEditor, stewieClassNames, blockRenderMap, blockStyleFn } from '.';
 import Editor from 'draft-js-plugins-editor-wysiwyg';
 import { OrderedSet } from 'immutable';
 import appStore from '../../appStore';
 import { EditorState } from 'draft-js';
 import Toolbar from '../Toolbar';
+import { LinkAccordion } from '../Link';
+
 const expectedValues = {
   rendering: {
     stewieClassNames
@@ -17,6 +19,9 @@ const expectedValues = {
 const reduxConnectionMock = {
   editor: {
     editorState: EditorState.createEmpty(),
+  },
+  app: {
+    init: true
   }
 };
 
@@ -62,6 +67,12 @@ describe('(components/StewieEditor/StewieEditor_test.js) - StewieEditor test', (
       expect(wrapper.find(Toolbar).length).toEqual(1, "Toolbar component is not inside StewieEditor");
     });
 
+    it('should have LinkAccordion component', ()=>{
+      const { realComponent } = testConfig;
+      realComponent.instance().linkChangeState({ showLinkAccordion: true });
+      expect(realComponent.find(LinkAccordion).length).toEqual(1, "Link accordion is not inside StewieEditor");
+    });
+
     it(`should have ${testConfig.stateKey} prop`, ()=>{
       const { realComponent, stateKey } = testConfig;
       expect(realComponent.props()[stateKey]).toExist();
@@ -82,6 +93,11 @@ describe('(components/StewieEditor/StewieEditor_test.js) - StewieEditor test', (
       expect(wrapper.find(Editor).props().blockRenderMap).toEqual(blockRenderMap);
     });
 
+    it('should have correct blockStyleFn prop', ()=>{
+      expect(wrapper.find(Editor).props().blockStyleFn).toExist();
+      expect(wrapper.find(Editor).props().blockStyleFn).toEqual(blockStyleFn);
+    });
+
 
     it('blockRenderMap should support hr custom block', ()=>{
       expect(blockRenderMap.get('hr')).toExist();
@@ -89,6 +105,11 @@ describe('(components/StewieEditor/StewieEditor_test.js) - StewieEditor test', (
 
     it('should contain draft-js-plugins-editor-wysiwyg Editor component', ()=> {
       expect(wrapper.find(Editor).length).toBe(1, "Editor component should be rendered inside StewieEditor");
+    });
+
+    it('should have plugins prop on draft-js editor with correct length', ()=>{
+      expect(wrapper.find(Editor).props().plugins).toExist();
+      expect(wrapper.find(Editor).props().plugins.length).toBe(1);
     });
 
     describe('Check react-redux bindings', ()=>{

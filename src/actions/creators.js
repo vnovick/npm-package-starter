@@ -12,7 +12,12 @@ export const transformState = (json) => ({
   json
 });
 
-export const configureToolbar = (buttonsConfig) => ({
+export const configureToolbar = (buttonsConfig, showLink) => ({
   type: Types.CONFIGURE_TOOLBAR,
   buttonsConfig
+});
+
+export const init = (predicate) => ({
+  type: Types.INIT,
+  init: predicate
 });

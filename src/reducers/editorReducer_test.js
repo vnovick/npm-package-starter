@@ -3,7 +3,6 @@ import editorReducer, { handlers } from './editorReducer';
 import immutable from 'seamless-immutable';
 import Types from '../actions/types';
 import { EditorState } from 'draft-js';
-import Editor from 'draft-js-plugins-editor-wysiwyg';
 
 describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
   describe('Setup', ()=>{
@@ -12,7 +11,7 @@ describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
     });
     it('should return draft-js EditorState for editorState prop', ()=>{
       expect(editorReducer()).toIncludeKey('editorState');
-      expect(editorReducer().editorState.constructor).toBe(EditorState)
+      expect(editorReducer().editorState.constructor).toBe(EditorState);
     });
     it('all handler types are defined', ()=> {
       expect(Object.keys(handlers).includes('undefined')).toNotExist("there are undefined handler types");
@@ -58,10 +57,10 @@ describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
     it('should update editor "json" key', () => {
       const newState = {
         buttonsConfig: {
-          test: true
+          buttonsList: ['LINK']
         }
       };
-      expect(editorReducer(INITIAL_STATE, { type: Types.CONFIGURE_TOOLBAR, ...newState })).toEqual({ buttonsConfig: { test: true } });
+      expect(editorReducer(INITIAL_STATE, { type: Types.CONFIGURE_TOOLBAR, ...newState })).toEqual({ buttonsConfig: { buttonsList: ['LINK'] } });
     });
   });
 });

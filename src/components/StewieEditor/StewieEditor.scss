@@ -12,3 +12,17 @@
   min-height: 80px;
   padding: 10px;
 }
+
+.blockType {
+  &__alignment {
+    &--left {
+      text-align: left;
+    }
+    &--center {
+      text-align: center;
+    }
+    &--right {
+      text-align: right;
+    }
+  }
+}

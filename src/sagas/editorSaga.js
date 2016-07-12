@@ -7,6 +7,8 @@ import { convertToRaw } from 'draft-js';
 export function * watchEditorChange() {
   while (true){
     let action = yield take(Types.EDITOR_CHANGE_STATE);
-    yield put(transformState(convertToRaw(action.editorState.getCurrentContent())))
+    const jsonState = convertToRaw(action.editorState.getCurrentContent());
+    console.log(JSON.stringify(jsonState));
+    yield put(transformState(jsonState))
   }
 }

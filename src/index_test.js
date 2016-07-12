@@ -7,7 +7,6 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 jsdom();
-
 describe('(index_test.js) -- Test Basic Setup', ()=>{
   describe('Test environment is up', ()=> {
     it('jsDom defined with correct document', () => {

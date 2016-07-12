@@ -2,6 +2,7 @@
 import { createReducer } from 'reduxsauce';
 import Types from '../actions/types';
 import { EditorState } from 'draft-js';
+import 'core-js';
 
 const INITIAL_STATE = {
   editorState: EditorState.createEmpty()
@@ -22,7 +23,6 @@ const setJsonState = (state, { json }) => {
 };
 
 const setToolbarConfig = (state, { buttonsConfig }) => {
-  console.log(buttonsConfig)
   return {
     ...state,
     buttonsConfig
