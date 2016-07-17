@@ -9,6 +9,6 @@ function getEditor(showMockedInitialState){
 export default () => (
   <div class="basic-editor">
     <h1>Basic Editor</h1>
-    { getEditor(true) }
+    { getEditor(false) }
   </div>
 );

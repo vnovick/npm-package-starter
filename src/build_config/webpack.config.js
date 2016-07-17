@@ -78,7 +78,7 @@ module.exports = Object.assign({
     loaders: [
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract("css?modules&localIdentName=[name]__[local]__[hash]!sass?sourceMap!postcss")
+        loader: ExtractTextPlugin.extract("css?modules&localIdentName=[name]__[local]!sass?sourceMap!postcss")
       },
       {
         test: /\.(ttf|eot|woff|svg|jpe?g|gif|png)[\?]?.*$/,

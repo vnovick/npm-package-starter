@@ -20,7 +20,7 @@ describe('(reducers/appReducer_test.js) - appReducer test', ()=>{
     });
   });
 
-  describe('"STARTUP" action', ()=> {
+  describe('"CONFIGURE_EDITOR" action', ()=> {
     let INITIAL_STATE;
     beforeEach(()=>{
       INITIAL_STATE = immutable({});
@@ -29,7 +29,7 @@ describe('(reducers/appReducer_test.js) - appReducer test', ()=>{
       const newState = {
         init: true
       };
-      expect(appReducer(INITIAL_STATE, { type: Types.INIT, ...newState })).toEqual({ init: true });
+      expect(appReducer(INITIAL_STATE, { type: Types.MOUNT_EDITOR, ...newState })).toEqual({ init: true });
     });
   });
 });

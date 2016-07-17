@@ -4,7 +4,7 @@ import styles from './toolbar.scss';
 import addBlock from 'draft-js-dnd-plugin/lib/modifiers/addBlock.js';
 import { defaultButtonsConfig } from './config';
 import { validateButtonsConfig } from './utils/configUtils';
-import { RichUtils, EditorState, Modifier } from 'draft-js';
+import { RichUtils, EditorState, Modifier, Entity, SelectionState } from 'draft-js';
 import autoBind from 'react-autobind';
 import { Button } from '../Button';
 
@@ -54,11 +54,22 @@ class Toolbar extends React.Component {
     configureToolbar(buttonsConfig || defaultButtonsConfig);
   }
 
-  alignmentToggle(blockType){
-    const { editorState, onToggle } = this.props;
+  alignmentToggle(direction){
+    const { editorState, onToggle, toggleAlignment } = this.props;
     const contentState = editorState.getCurrentContent();
     const selectionState = editorState.getSelection();
-    onToggle(EditorState.push(editorState, Modifier.setBlockType(contentState, selectionState, `alignment--${blockType}`)));
+    const starBlock = contentState.getBlockForKey(selectionState.getAnchorKey());
+    const endBlock = contentState.getBlockForKey(selectionState.getFocusKey());
+    const entityKey = Entity.create('ALIGNMENT', 'MUTABLE', { alignment: direction });
+    const fullblock = new SelectionState({
+      anchorKey: starBlock.getKey(),
+      anchorOffset: 0,
+      focusKey: endBlock.getKey(),
+      focusOffset: selectionState.getEndOffset()
+    });
+    let newEditorState = RichUtils.toggleLink(editorState, fullblock, entityKey);
+    onToggle(EditorState.forceSelection(newEditorState, selectionState));
+    // toggleAlignment(direction);
   }
 
   linkToggle(blockType){

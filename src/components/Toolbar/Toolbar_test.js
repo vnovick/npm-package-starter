@@ -101,7 +101,7 @@ describe('(components/Toolbar/Toolbar_test.js) - Toolbar test', ()=>{
       describe('Relevant toggleFunctions work properly', ()=>{
         let getToolbar;
         beforeEach(()=>{
-          getToolbar = (toggleSpy) => { return shallow(<Toolbar onToggle={ toggleSpy } editorState={ EditorState.createEmpty() }/>); };
+          getToolbar = (toggleSpy) => { return shallow(<Toolbar onToggle={ toggleSpy } toggleAlignment={ ()=>{} } editorState={ EditorState.createEmpty() }/>); };
         });
         it('blockToggle function should exist', ()=>{
           expect(getToolbar(expect.createSpy()).instance().blockToggle).toExist();

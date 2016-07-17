@@ -1,6 +1,6 @@
 import Types from './types';
 
-export const startup = (config) => ({ type: Types.STARTUP, config: config });
+export const startup = (config) => ({ type: Types.CONFIGURE_EDITOR, config: config });
 
 export const changeState = (editorState) => ({
   type: Types.EDITOR_CHANGE_STATE,
@@ -18,6 +18,17 @@ export const configureToolbar = (buttonsConfig, showLink) => ({
 });
 
 export const init = (predicate) => ({
-  type: Types.INIT,
+  type: Types.MOUNT_EDITOR,
   init: predicate
 });
+
+export const updateWordCount = (wordCount) => ({
+  type: Types.UPDATE_WORD_COUNT,
+  wordCount
+});
+
+export const updateCharCount = (charCount) => ({
+  type: Types.UPDATE_CHAR_COUNT,
+  charCount
+});
+

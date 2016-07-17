@@ -14,7 +14,7 @@ const setState = (state, action) => {
 };
 
 export const handlers = {
-  [Types.INIT]: setState
+  [Types.MOUNT_EDITOR]: setState
 };
 
 export default createReducer(INITIAL_STATE, handlers);

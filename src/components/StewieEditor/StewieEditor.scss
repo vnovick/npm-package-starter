@@ -13,7 +13,12 @@
   padding: 10px;
 }
 
-.blockType {
+.block {
+  &__BOLD, &__ITALIC, &__UNDERLINE, &__unordered-list-item, &__ordered-list-item, &__unstyled,
+  &__blockquote, &__header-one, &__header-two, &__header-three, &__header-four, &__header-five,
+  &__header-six, &__add, &__hr {
+    color: inherit;
+  }
   &__alignment {
     &--left {
       text-align: left;
