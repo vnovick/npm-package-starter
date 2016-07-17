@@ -9,7 +9,6 @@ export function * watchEditorChange() {
   while (true){
     let { editorState } = yield take(Types.EDITOR_CHANGE_STATE);
     const jsonState = convertToRaw(editorState.getCurrentContent());
-    console.log(JSON.stringify(jsonState));
     yield put(transformState(jsonState));
     yield put(updateWordCount(getWordCount(editorState)));
     yield put(updateCharCount(getCharCount(editorState)));

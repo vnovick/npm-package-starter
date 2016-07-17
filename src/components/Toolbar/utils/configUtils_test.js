@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import expect from 'expect';
-import { defaultButtonsConfig, ALLOWED_CONTROL_TYPES, ALLOWED_BLOCK_TYPES } from '../config';
+import { defaultButtonsConfig, ALLOWED_BLOCK_TYPES } from '../config';
 import { validateButtonsConfig, assertButtonsConfig, } from './configUtils';
 
 describe('(components/Toolbar/configUtils_test.js) - Toolbar configUtils test', ()=>{
@@ -18,7 +18,7 @@ describe('(components/Toolbar/configUtils_test.js) - Toolbar configUtils test', 
           }
         }
       };
-      expect(validateButtonsConfig(configurationMock.buttonsConf).length).toEqual(2);
+      expect(validateButtonsConfig(configurationMock).length).toEqual(2);
     });
     it('all configuration should be provided for buttonsList', ()=>{
       const { buttonsConf, buttonsList } = defaultButtonsConfig;

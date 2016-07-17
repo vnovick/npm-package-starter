@@ -11,15 +11,16 @@ describe('(sagas/sagasIndex_test.js) - sagas index test', ()=>{
       generator = rootSaga();
     });
 
+
     it('root is generator function', ()=>{
       expect(rootSaga).toBeA(GeneratorFunction);
     });
-    it('length of rootSaga should be 2', ()=>{
+    it('length of rootSaga should be 4', ()=>{
       let i = 0;
       while(!generator.next().done){
         i++;
       }
-      expect(i).toBe(2);
+      expect(i).toBe(4);
     });
     it('sagas are exported using FORK with truthy @@redux-saga/IO and all sagas are generators', ()=>{
       let generatorsYields = [];
@@ -38,7 +39,9 @@ describe('(sagas/sagasIndex_test.js) - sagas index test', ()=>{
     it('there should be correct sagas list', ()=>{
       let expectedSagas = [
         'watchStartup',
-        'watchEditorChange'
+        'watchEditorChange',
+        'watchToolbarConfig',
+        'globalApiObservers'
       ];
       let generatorsYields = [];
       let generatorRun = generator.next();

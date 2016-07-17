@@ -1,5 +1,13 @@
 import { ALLOWED_CONTROL_TYPES, ALLOWED_BLOCK_TYPES } from '../config';
-
+export function asserButtonsListConfig(buttonsList, buttonsConf){
+  const undefinedButtons = buttonsList.map((key) => {
+    if (!buttonsConf[key]) {
+      return `${key} is not defined in buttonsConf`;
+    }
+    return false;
+  }).filter(key => key);
+  return undefinedButtons;
+}
 
 export function assertButtonsConfig(errMessageArray, buttonsConf, type, allowedTypes){
   let assertionErrors = errMessageArray;
@@ -14,8 +22,10 @@ export function assertButtonsConfig(errMessageArray, buttonsConf, type, allowedT
   return assertionErrors;
 }
 
-export function validateButtonsConfig(buttonsConf, callback){
+export function validateButtonsConfig(buttonsConfig, callback){
+  const { buttonsConf, buttonsList } = buttonsConfig;
   let errors = [
+    ...asserButtonsListConfig(buttonsList, buttonsConf),
     ...assertButtonsConfig([], buttonsConf, 'controlType', ALLOWED_CONTROL_TYPES),
     ...assertButtonsConfig([], buttonsConf, 'blockType', ALLOWED_BLOCK_TYPES)
   ];

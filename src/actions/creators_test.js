@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import expect from 'expect';
-import { startup, changeState, transformState, configureToolbar, init, updateWordCount, updateCharCount, setAlignment } from './creators';
+import { startup, changeState, transformState, configureToolbar, init, updateWordCount, updateCharCount, configureEditorApi, throwConfigurationError, globalApiConfig } from './creators';
 import Types from './types';
 describe('(actions/creators_test.js) - action creators test', ()=>{
   describe('Startup Action Creator', ()=>{
@@ -41,6 +41,24 @@ describe('(actions/creators_test.js) - action creators test', ()=>{
       const passedConfig = { buttonsConfig: {}, buttonsList: [] };
       const action = configureToolbar(passedConfig);
       expect(action.buttonsConfig).toBe(passedConfig);
+    });
+  });
+  describe('configureEditorApi Action Creator', ()=>{
+    let action;
+    let apiConfig = { subscribers: {
+      state: () => {},
+      wordCount: () => {},
+      charCount: () => {},
+      api: () => {}
+    } };
+    beforeEach(() => {
+      action = configureEditorApi(apiConfig);
+    });
+    it('should be of correct type', ()=>{
+      expect(action.type).toBe(Types.CONFIGURE_EDITOR_API);
+    });
+    it('should return configuration object if passed', ()=>{
+      expect(action.subscribers).toBe(apiConfig);
     });
   });
   describe('transformState Action Creator', ()=>{
@@ -91,6 +109,30 @@ describe('(actions/creators_test.js) - action creators test', ()=>{
     });
     it('should return configuration object if passed', ()=>{
       expect(action.charCount).toBe(71);
+    });
+  });
+  describe('throwConfigurationError Action Creator', ()=>{
+    let action;
+    beforeEach(() => {
+      action = throwConfigurationError('test');
+    });
+    it('should be of correct type', ()=>{
+      expect(action.type).toBe(Types.CONFIGURATION_ERROR);
+    });
+    it('should return configuration object if passed', ()=>{
+      expect(action.message).toEqual('test');
+    });
+  });
+  describe('globalApiConfig Action Creator', ()=>{
+    let action;
+    beforeEach(() => {
+      action = globalApiConfig({ config: "test" });
+    });
+    it('should be of correct type', ()=>{
+      expect(action.type).toBe(Types.GLOBAL_API_CONFIG);
+    });
+    it('should return configuration object if passed', ()=>{
+      expect(action.apiConfig).toEqual({ config: "test" });
     });
   });
 });

@@ -99,7 +99,7 @@ export class StewieEditor extends Component {
   renderLinkIfisInToolbar(editorState){
     const { showLinkAccordion, urlValue } = this.state;
     if (showLinkAccordion) {
-      return <LinkAccordion editorFocus={ () => { this.refs.editor.focus(); } } editorState={ editorState } urlValue={ urlValue } changeState={ this.linkChangeState }
+      return <LinkAccordion key="LinkAccordion" editorFocus={ () => { this.refs.editor.focus(); } } editorState={ editorState } urlValue={ urlValue } changeState={ this.linkChangeState }
         onConfirm={ this.toggleToolbarButton }/>;
     }
     return false;
@@ -110,27 +110,28 @@ export class StewieEditor extends Component {
   }
 
   render(){
-    const { editor: { buttonsConfig, editorState, alignment }, app: { init } } = this.props;
+    const { editor: { buttonsConfig, editorState }, app: { init } } = this.props;
     return (
       <div className={ stewieClassNames.container }>
-        <Toolbar linkToggle={ this.linkChangeState } onToggle={ this.toggleToolbarButton }
-          configureToolbar={ this.props.configureToolbar }
-          buttonsConfig={ buttonsConfig } editorState={ editorState }
-        />
-        { this.renderLinkIfisInToolbar(editorState) }
-        <div className={ stewieClassNames.editor }>
-           { init ?
-             <Editor editorState={ editorState }
-               blockStyleFn={ blockStyleFn }
-               blockRendererFn={ customBlockRender }
-               blockRenderMap={ blockRenderMap }
-               onChange={ this.changeState }
-               handleKeyCommand={ this.handleKeyCommand }
-               ref="editor"
-               plugins={ plugins }
-             />
-             : false }
-        </div>
+        { init ? [
+          <Toolbar key="toolbar" linkToggle={ this.linkChangeState } onToggle={ this.toggleToolbarButton }
+            configureToolbar={ this.props.configureToolbar }
+            buttonsConfig={ buttonsConfig } editorState={ editorState }
+          />,
+          this.renderLinkIfisInToolbar(editorState),
+          <div key="StewieEditor" className={ stewieClassNames.editor }>
+               <Editor editorState={ editorState }
+                 blockStyleFn={ blockStyleFn }
+                 blockRendererFn={ customBlockRender }
+                 blockRenderMap={ blockRenderMap }
+                 onChange={ this.changeState }
+                 handleKeyCommand={ this.handleKeyCommand }
+                 ref="editor"
+                 plugins={ plugins }
+               />
+           </div> ]
+           : false
+        }
       </div>
     );
   }

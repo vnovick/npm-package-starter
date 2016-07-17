@@ -15,6 +15,13 @@ const setState = (state, { editorState }) => {
   };
 };
 
+const configureSubscribers = (state, { subscribers }) => {
+  return {
+    ...state,
+    subscribers
+  };
+};
+
 const setJsonState = (state, { json }) => {
   return {
     ...state,
@@ -33,8 +40,8 @@ const updateWordCount = (state, { wordCount }) => {
   return {
     ...state,
     wordCount
-  }
-}
+  };
+};
 
 const updateCharCount = (state, { charCount }) => {
   return {
@@ -46,6 +53,7 @@ const updateCharCount = (state, { charCount }) => {
 
 export const handlers = {
   [Types.EDITOR_CHANGE_STATE]: setState,
+  [Types.CONFIGURE_EDITOR_API]: configureSubscribers,
   [Types.EDITOR_TRANSFORM_TO_RAW_STATE]: setJsonState,
   [Types.CONFIGURE_TOOLBAR]: setToolbarConfig,
   [Types.UPDATE_WORD_COUNT]: updateWordCount,

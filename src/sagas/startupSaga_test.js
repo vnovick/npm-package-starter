@@ -11,7 +11,7 @@ describe('(sagas/startupSaga_test.js) - test editor sagas', ()=>{
     let saga;
     beforeEach(()=>{
       saga = testSaga(watchStartup);
-    })
+    });
     it('watchStartup saga is not throwing exception', ()=>{
       let generator = watchStartup();
       let exception;
@@ -40,6 +40,29 @@ describe('(sagas/startupSaga_test.js) - test editor sagas', ()=>{
       expect(newEditorState)
         .toBeA(EditorState);
       expect(convertToRaw(newEditorState.getCurrentContent())).toEqual(expectedState);
+    });
+    it('watchStartup saga can deal with subscribers passed in config to startup action', ()=>{
+      let subscribers = {
+        api: () => {},
+        charCount: () => {},
+        state: () => {},
+        wordCount: () => {}
+      };
+      saga
+        .next({ type: Types.CONFIGURE_EDITOR })
+        .take(Types.CONFIGURE_EDITOR)
+        .next({ config: { subscribers } })
+        .put({ type: Types.CONFIGURE_EDITOR_API, subscribers });
+    });
+    it('watchStartup saga throws error if subscribers passed as object and not function', ()=>{
+      let subscribers = {
+        api: {}
+      };
+      saga
+        .next({ type: Types.CONFIGURE_EDITOR })
+        .take(Types.CONFIGURE_EDITOR)
+        .next({ config: { subscribers } })
+        .put({ type: Types.CONFIGURATION_ERROR, message: "subscribers must be functions, the following subscribers type is incorrect: api" });
     });
     it('watchStartup saga throws MOUNT_EDITOR action', ()=>{
       saga.next({ type: Types.CONFIGURE_EDITOR }).take(Types.CONFIGURE_EDITOR).next({ config: null }).put({ type: Types.MOUNT_EDITOR, init: true });

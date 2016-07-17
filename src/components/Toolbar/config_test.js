@@ -16,8 +16,7 @@ describe('(components/Toolbar/config_test.js) - Toolbar config test', ()=>{
       expect(Object.keys(buttonsConf)).toEqual(buttonsList);
     });
     it(`all controlTypes are on of the following types: ${ALLOWED_CONTROL_TYPES.join(',')} and blockTypes are of ${ALLOWED_BLOCK_TYPES}`, ()=>{
-      const { buttonsConf } = defaultButtonsConfig;
-      let errorArray = validateButtonsConfig(buttonsConf);
+      let errorArray = validateButtonsConfig(defaultButtonsConfig);
       expect(errorArray).toEqual([]);
     });
   });

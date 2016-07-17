@@ -3,6 +3,9 @@ import { createTypes } from 'reduxsauce';
 
 export default createTypes(`
   CONFIGURE_EDITOR
+  CONFIGURE_EDITOR_API
+  GLOBAL_API_CONFIG
+  CONFIGURATION_ERROR
   MOUNT_EDITOR
   EDITOR_CHANGE_STATE
   EDITOR_TRANSFORM_TO_RAW_STATE

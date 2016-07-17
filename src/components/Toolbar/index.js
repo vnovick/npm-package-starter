@@ -2,9 +2,7 @@ import 'core-js';
 import React from 'react';
 import styles from './toolbar.scss';
 import addBlock from 'draft-js-dnd-plugin/lib/modifiers/addBlock.js';
-import { defaultButtonsConfig } from './config';
-import { validateButtonsConfig } from './utils/configUtils';
-import { RichUtils, EditorState, Modifier, Entity, SelectionState } from 'draft-js';
+import { RichUtils, EditorState, Entity, SelectionState } from 'draft-js';
 import autoBind from 'react-autobind';
 import { Button } from '../Button';
 
@@ -26,19 +24,6 @@ function populateToolbarButtons(config, toggleControls, isActive, isMenuButton){
   });
 }
 
-function validateAndPopulateButtons(config, toggleControls, isButtonActive){
-  if (config) {
-    const { buttonsConf } = config;
-    const errors = validateButtonsConfig(buttonsConf);
-    if (errors.length === 0) {
-      return populateToolbarButtons(config, toggleControls, isButtonActive);
-    }
-    throw Error(errors);
-  }
-  return false;
-}
-
-
 class Toolbar extends React.Component {
 
   constructor(props){
@@ -49,10 +34,6 @@ class Toolbar extends React.Component {
     autoBind(this);
   }
 
-  componentDidMount(){
-    const { configureToolbar, buttonsConfig } = this.props;
-    configureToolbar(buttonsConfig || defaultButtonsConfig);
-  }
 
   alignmentToggle(direction){
     const { editorState, onToggle, toggleAlignment } = this.props;
@@ -124,9 +105,11 @@ class Toolbar extends React.Component {
     const { buttonsConfig } = this.props;
     const { inlineToggle, alignmentToggle, blockToggle, linkToggle, isButtonActivePredicate, customBlockToggle } = this;
     return (
-      <div className={ containerClassName }>
-        { validateAndPopulateButtons(buttonsConfig, { inlineToggle, alignmentToggle, blockToggle, linkToggle, customBlockToggle }, isButtonActivePredicate) }
-      </div>
+      buttonsConfig && buttonsConfig.configured ?
+        <div className={ containerClassName }>
+          { populateToolbarButtons(buttonsConfig, { inlineToggle, alignmentToggle, blockToggle, linkToggle, customBlockToggle }, isButtonActivePredicate) }
+        </div>
+        : false
     );
   }
 }

@@ -15,7 +15,11 @@ const expectedValues = {
 
 const reduxConnectionMock = {
   editor: {
-    editorState: EditorState.createEmpty()
+    editorState: EditorState.createEmpty(),
+    buttonsConfig: {
+      ...defaultButtonsConfig,
+      configured: true
+    }
   },
   app: {
     init: true
@@ -59,29 +63,10 @@ describe('(components/Toolbar/Toolbar_test.js) - Toolbar test', ()=>{
         expect(shallowContainer.find(Toolbar).props().onToggle).toExist();
       });
 
-      it('check toolbar configureToolbar action passed as prop', ()=>{
-        const { realConnectedToolbar } = testConfig;
-        expect(realConnectedToolbar.find(Toolbar).props().configureToolbar).toExist();
-      });
-
       it('check toolbar editorState passed as prop', ()=>{
-        const { realConnectedToolbar } = testConfig;
-        expect(realConnectedToolbar.find(Toolbar).props().editorState).toExist();
+        const { shallowContainer } = testConfig;
+        expect(shallowContainer.find(Toolbar).props().editorState).toExist();
       });
-
-      it('check configureToolbar action is called with defaultButtonsConfig', ()=>{
-        const configureToolbar = expect.createSpy();
-        mount(
-          <StewieEditor { ...testConfig.editorActions }
-            configureToolbar={ configureToolbar }
-            app={ { init: true } }
-            editor={ {
-              editorState: EditorState.createEmpty()
-            } }
-          />);
-        expect(configureToolbar).toHaveBeenCalledWith(defaultButtonsConfig);
-      });
-
 
       it('check relevant functions exist on container instance', ()=>{
         const { shallowContainer } = testConfig;
@@ -92,7 +77,10 @@ describe('(components/Toolbar/Toolbar_test.js) - Toolbar test', ()=>{
       describe('check changeState action is thrown when executing onToggle with Editor State', ()=>{
         it('should throw changeState action', () =>{
           const changeStateSpy = expect.createSpy();
-          const container = shallow(<StewieEditor app={ { init: true } } changeState={ changeStateSpy } editor={ { editorState: EditorState.createEmpty() } } />);
+          const container = shallow(
+            <StewieEditor app={ { init: true } } changeState={ changeStateSpy }
+              editor={ { editorState: EditorState.createEmpty() } }
+            />);
           container.find(Toolbar).props().onToggle(EditorState.createEmpty());
           expect(changeStateSpy).toHaveBeenCalled();
         });
