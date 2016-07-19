@@ -1,13 +1,14 @@
 {
   "name": "stewie-editor",
-  "version": "0.1.01",
+  "version": "0.1.02",
   "description": "Stewie is a structured wysiwyg based on DraftJS and draftjs-plugin-editor",
   "main": "lib/StewieEditor.js",
   "scripts": {
     "start": "npm run start-dev",
     "start-dev": "better-npm-run watch-client",
     "compile": "better-npm-run compile",
-    "prepublish": "npm run compile",
+    "prepublish": "npm run deploy",
+    "deploy": "NODE_ENV=production webpack --config ./src/build_config/webpack.config.js",
     "test": "better-npm-run compile-test",
     "test-full": "better-npm-run compile-test-full",
     "clean-install": "rm -rf node_modules && npm i"
