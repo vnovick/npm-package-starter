@@ -1,50 +1,67 @@
 import Types from './types';
 
-export const startup = (config) => ({ type: Types.CONFIGURE_EDITOR, config: config });
+export const startup = (config, id) => ({
+  type: Types.CONFIGURE_EDITOR,
+  config,
+  id
+});
 
-export const changeState = (editorState, subscribers) => ({
+export const changeState = (id, editorState, subscribers) => ({
   type: Types.EDITOR_CHANGE_STATE,
-  editorState
+  editorState,
+  id
 });
 
-export const transformState = (json) => ({
+export const transformState = (id, json) => ({
   type: Types.EDITOR_TRANSFORM_TO_RAW_STATE,
-  json
+  json,
+  id
 });
 
-export const configureToolbar = (buttonsConfig, showLink) => ({
+export const configureToolbar = (id, buttonsConfig) => ({
   type: Types.CONFIGURE_TOOLBAR,
-  buttonsConfig
+  buttonsConfig,
+  id
 });
 
+export const linkAccordionToggle = (id, linkAccordion) => ({
+  type: Types.LINK_ACCORDION_TOGGLE,
+  linkAccordion,
+  id
+});
 
-export const configureEditorApi = (subscribers) => ({
+export const configureEditorApi = (id, subscribers) => ({
   type: Types.CONFIGURE_EDITOR_API,
+  id,
   subscribers
 });
 
-export const init = (predicate) => ({
+export const init = (id) => ({
   type: Types.MOUNT_EDITOR,
-  init: predicate
+  id
 });
 
-export const updateWordCount = (wordCount) => ({
+export const updateWordCount = (id, wordCount) => ({
   type: Types.UPDATE_WORD_COUNT,
-  wordCount
+  wordCount,
+  id
 });
 
-export const updateCharCount = (charCount) => ({
+export const updateCharCount = (id, charCount) => ({
   type: Types.UPDATE_CHAR_COUNT,
-  charCount
+  charCount,
+  id
 });
 
-export const throwConfigurationError = (message) => ({
+export const throwConfigurationError = (id, message) => ({
   type: Types.CONFIGURATION_ERROR,
-  message
+  message,
+  id
 });
 
-export const globalApiConfig = (apiConfig) => ({
+export const globalApiConfig = (id, apiConfig) => ({
   type: Types.GLOBAL_API_CONFIG,
-  apiConfig
+  apiConfig,
+  id
 });
 

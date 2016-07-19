@@ -4,54 +4,95 @@ import Types from '../actions/types';
 import { EditorState } from 'draft-js';
 import 'core-js';
 
-const INITIAL_STATE = {
-  editorState: EditorState.createEmpty(),
-};
+const INITIAL_STATE = {};
 
-const setState = (state, { editorState }) => {
+const setState = (state, { editorState, id }) => {
   return {
     ...state,
-    editorState
+    [id]: {
+      ...state[id],
+      editorState
+    }
   };
 };
 
-const configureSubscribers = (state, { subscribers }) => {
+const configureSubscribers = (state, { subscribers, id }) => {
   return {
     ...state,
-    subscribers
+    [id]: {
+      ...state[id],
+      subscribers
+    }
   };
 };
 
-const setJsonState = (state, { json }) => {
+const setJsonState = (state, { json, id }) => {
   return {
     ...state,
-    json
+    [id]: {
+      ...state[id],
+      json
+    }
   };
 };
 
-const setToolbarConfig = (state, { buttonsConfig }) => {
+const setToolbarConfig = (state, { buttonsConfig, id }) => {
   return {
     ...state,
-    buttonsConfig
+    [id]: {
+      ...state[id],
+      buttonsConfig
+    }
   };
 };
 
-const updateWordCount = (state, { wordCount }) => {
+
+const updateWordCount = (state, { wordCount, id }) => {
   return {
     ...state,
-    wordCount
+    [id]: {
+      ...state[id],
+      wordCount
+    }
   };
 };
 
-const updateCharCount = (state, { charCount }) => {
+const updateCharCount = (state, { charCount, id }) => {
   return {
     ...state,
-    charCount
+    [id]: {
+      ...state[id],
+      charCount
+    }
   };
 };
 
+const setEditor = (state, { id }) => {
+  return {
+    ...state,
+    [id]: {
+      editorState: EditorState.createEmpty(),
+      linkAccordion: {
+        showLinkAccordion: false,
+        urlValue: ''
+      }
+    }
+  };
+};
+
+const mountEditor = (state, { id }) => {
+  return {
+    ...state,
+    [id]: {
+      ...state[id],
+      init: true
+    }
+  };
+};
 
 export const handlers = {
+  [Types.CONFIGURE_EDITOR]: setEditor,
+  [Types.MOUNT_EDITOR]: mountEditor,
   [Types.EDITOR_CHANGE_STATE]: setState,
   [Types.CONFIGURE_EDITOR_API]: configureSubscribers,
   [Types.EDITOR_TRANSFORM_TO_RAW_STATE]: setJsonState,

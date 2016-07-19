@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import expect from 'expect';
-import { startup, changeState, transformState, configureToolbar, init, updateWordCount, updateCharCount, configureEditorApi, throwConfigurationError, globalApiConfig } from './creators';
+import { startup, changeState, transformState, configureToolbar, linkAccordionToggle, init, updateWordCount, updateCharCount, configureEditorApi, throwConfigurationError, globalApiConfig } from './creators';
 import Types from './types';
 describe('(actions/creators_test.js) - action creators test', ()=>{
   describe('Startup Action Creator', ()=>{
@@ -20,13 +20,26 @@ describe('(actions/creators_test.js) - action creators test', ()=>{
     let action;
     let configObj = { editorState: "Some state to test" };
     beforeEach(() => {
-      action = changeState(configObj);
+      action = changeState('id', configObj);
     });
     it('should be of correct type', ()=>{
       expect(action.type).toBe(Types.EDITOR_CHANGE_STATE);
     });
     it('should return configuration object if passed', ()=>{
       expect(action.editorState).toBe(configObj);
+    });
+  });
+  describe('transformState Action Creator', ()=>{
+    let action;
+    let configObj = { json: {} };
+    beforeEach(() => {
+      action = transformState('id', configObj);
+    });
+    it('should be of correct type', ()=>{
+      expect(action.type).toBe(Types.EDITOR_TRANSFORM_TO_RAW_STATE);
+    });
+    it('should return configuration object if passed', ()=>{
+      expect(action.json).toBe(configObj);
     });
   });
   describe('configureToolbar Action Creator', ()=>{
@@ -39,7 +52,7 @@ describe('(actions/creators_test.js) - action creators test', ()=>{
     });
     it('should return configuration object if passed', ()=>{
       const passedConfig = { buttonsConfig: {}, buttonsList: [] };
-      const action = configureToolbar(passedConfig);
+      const action = configureToolbar('id', passedConfig);
       expect(action.buttonsConfig).toBe(passedConfig);
     });
   });
@@ -52,7 +65,7 @@ describe('(actions/creators_test.js) - action creators test', ()=>{
       api: () => {}
     } };
     beforeEach(() => {
-      action = configureEditorApi(apiConfig);
+      action = configureEditorApi('id', apiConfig);
     });
     it('should be of correct type', ()=>{
       expect(action.type).toBe(Types.CONFIGURE_EDITOR_API);
@@ -61,36 +74,23 @@ describe('(actions/creators_test.js) - action creators test', ()=>{
       expect(action.subscribers).toBe(apiConfig);
     });
   });
-  describe('transformState Action Creator', ()=>{
-    let action;
-    let configObj = { json: {} };
-    beforeEach(() => {
-      action = transformState(configObj);
-    });
-    it('should be of correct type', ()=>{
-      expect(action.type).toBe(Types.EDITOR_TRANSFORM_TO_RAW_STATE);
-    });
-    it('should return configuration object if passed', ()=>{
-      expect(action.json).toBe(configObj);
-    });
-  });
   describe('init Action Creator', ()=>{
     let action;
     let predicate = true;
     beforeEach(() => {
-      action = init(predicate);
+      action = init('id');
     });
     it('should be of correct type', ()=>{
       expect(action.type).toBe(Types.MOUNT_EDITOR);
     });
     it('should return configuration object if passed', ()=>{
-      expect(action.init).toBe(predicate);
+      expect(action.id).toBe('id');
     });
   });
   describe('updateWordCount Action Creator', ()=>{
     let action;
     beforeEach(() => {
-      action = updateWordCount(13);
+      action = updateWordCount('id', 13);
     });
     it('should be of correct type', ()=>{
       expect(action.type).toBe(Types.UPDATE_WORD_COUNT);
@@ -102,7 +102,7 @@ describe('(actions/creators_test.js) - action creators test', ()=>{
   describe('updateCharCount Action Creator', ()=>{
     let action;
     beforeEach(() => {
-      action = updateCharCount(71);
+      action = updateCharCount('id', 71);
     });
     it('should be of correct type', ()=>{
       expect(action.type).toBe(Types.UPDATE_CHAR_COUNT);
@@ -114,7 +114,7 @@ describe('(actions/creators_test.js) - action creators test', ()=>{
   describe('throwConfigurationError Action Creator', ()=>{
     let action;
     beforeEach(() => {
-      action = throwConfigurationError('test');
+      action = throwConfigurationError('id', 'test');
     });
     it('should be of correct type', ()=>{
       expect(action.type).toBe(Types.CONFIGURATION_ERROR);
@@ -126,7 +126,7 @@ describe('(actions/creators_test.js) - action creators test', ()=>{
   describe('globalApiConfig Action Creator', ()=>{
     let action;
     beforeEach(() => {
-      action = globalApiConfig({ config: "test" });
+      action = globalApiConfig('id', { config: "test" });
     });
     it('should be of correct type', ()=>{
       expect(action.type).toBe(Types.GLOBAL_API_CONFIG);

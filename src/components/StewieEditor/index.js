@@ -5,9 +5,10 @@ import Editor from 'draft-js-plugins-editor-wysiwyg';
 import { RichUtils, DefaultDraftBlockRenderMap, Entity, Modifier, SelectionState, EditorState, contentBlock } from 'draft-js';
 import autoBind from 'react-autobind';
 import { connect } from 'react-redux';
-import { changeState, configureToolbar } from '../../actions/creators';
+import { changeState, configureToolbar, setEditor } from '../../actions/creators';
 import Toolbar from '../Toolbar';
 import { LinkAccordion, linkPlugin } from '../Link';
+
 
 export const stewieClassNames = styles;
 
@@ -52,9 +53,8 @@ export class StewieEditor extends Component {
     autoBind(this);
   }
 
-
   changeState(editorState){
-    this.props.changeState(editorState);
+    this.props.changeState(this.props.id, editorState);
   }
 
   // toggleAlignment(alignment){
@@ -96,11 +96,16 @@ export class StewieEditor extends Component {
     this.changeState(editorState);
   }
 
-  renderLinkIfisInToolbar(editorState){
-    const { showLinkAccordion, urlValue } = this.state;
+  renderLinkIfisInToolbar(editorState, { showLinkAccordion, urlValue }){
     if (showLinkAccordion) {
-      return <LinkAccordion key="LinkAccordion" editorFocus={ () => { this.refs.editor.focus(); } } editorState={ editorState } urlValue={ urlValue } changeState={ this.linkChangeState }
-        onConfirm={ this.toggleToolbarButton }/>;
+      return (
+        <LinkAccordion key="LinkAccordion"
+          editorFocus={ () => { this.refs.editor.focus(); } }
+          editorState={ editorState } urlValue={ urlValue }
+          changeState={ this.linkChangeState }
+          onConfirm={ this.toggleToolbarButton }
+        />
+      );
     }
     return false;
   }
@@ -110,33 +115,40 @@ export class StewieEditor extends Component {
   }
 
   render(){
-    const { editor: { buttonsConfig, editorState }, app: { init } } = this.props;
-    return (
-      <div className={ stewieClassNames.container }>
-        { init ? [
-          <Toolbar key="toolbar" linkToggle={ this.linkChangeState } onToggle={ this.toggleToolbarButton }
-            configureToolbar={ this.props.configureToolbar }
-            buttonsConfig={ buttonsConfig } editorState={ editorState }
-          />,
-          this.renderLinkIfisInToolbar(editorState),
-          <div key="StewieEditor" className={ stewieClassNames.editor }>
-               <Editor editorState={ editorState }
-                 blockStyleFn={ blockStyleFn }
-                 blockRendererFn={ customBlockRender }
-                 blockRenderMap={ blockRenderMap }
-                 onChange={ this.changeState }
-                 handleKeyCommand={ this.handleKeyCommand }
-                 ref="editor"
-                 plugins={ plugins }
-               />
-           </div> ]
-           : false
-        }
-      </div>
-    );
+    if (this.props.editor){
+      const { editor: { buttonsConfig, editorState, init } } = this.props;
+      return (
+        <div className={ stewieClassNames.container }>
+          { init ? [
+            <Toolbar key="toolbar" linkToggle={ this.linkChangeState }
+              onToggle={ this.toggleToolbarButton }
+              configureToolbar={ this.props.configureToolbar }
+              buttonsConfig={ buttonsConfig } editorState={ editorState }
+            />,
+            this.renderLinkIfisInToolbar(editorState, this.state),
+            <div key="StewieEditor" className={ stewieClassNames.editor }>
+                 <Editor editorState={ editorState }
+                   blockStyleFn={ blockStyleFn }
+                   blockRendererFn={ customBlockRender }
+                   blockRenderMap={ blockRenderMap }
+                   onChange={ this.changeState }
+                   handleKeyCommand={ this.handleKeyCommand }
+                   ref="editor"
+                   plugins={ plugins }
+                 />
+             </div> ]
+             : false
+          }
+        </div>
+      );
+    } else {
+      return false;
+    }
   }
 }
 
-export default connect(({ editor, app })=>({ editor, app }), { changeState, configureToolbar })(StewieEditor);
+export default connect(({ editor }, { id })=>{
+  return { editor: editor[id], id };
+}, { changeState, configureToolbar })(StewieEditor);
 
 

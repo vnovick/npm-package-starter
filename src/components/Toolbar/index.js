@@ -8,7 +8,7 @@ import { Button } from '../Button';
 
 export const toolbarClassNames = styles;
 
-function populateToolbarButtons(config, toggleControls, isActive, isMenuButton){
+export function populateToolbarButtons(config, toggleControls, isActive, isMenuButton){
   const { buttonsList, buttonsConf } = config;
   return buttonsList.map((button) => {
     const bConf = buttonsConf[button];

@@ -6,23 +6,25 @@ import { defaultButtonsConfig } from '../components/Toolbar/config';
 import { validateButtonsConfig } from '../components/Toolbar/utils/configUtils';
 
 export function * watchToolbarConfig() {
-  const action = yield take(Types.CONFIGURE_EDITOR);
-  if (action.config && action.config.buttonsConfig){
-    const { buttonsConfig: outerConfig } = action.config;
-    const { buttonsConf, buttonsList } = defaultButtonsConfig;
-    const validatedButtonsConfig = {
-      buttonsList: outerConfig.buttonsList || buttonsList,
-      buttonsConf: outerConfig.buttonsConf || buttonsConf,
-      configured: true
-    };
-    const errors = validateButtonsConfig(validatedButtonsConfig);
-    if (errors.length > 0) {
-      yield put(throwConfigurationError({ message: errors }));
+  while (true){
+    const { config, id } = yield take(Types.CONFIGURE_EDITOR);
+    if (config && config.buttonsConfig){
+      const { buttonsConfig: outerConfig } = config;
+      const { buttonsConf, buttonsList } = defaultButtonsConfig;
+      const validatedButtonsConfig = {
+        buttonsList: outerConfig.buttonsList || buttonsList,
+        buttonsConf: outerConfig.buttonsConf || buttonsConf,
+        configured: true
+      };
+      const errors = validateButtonsConfig(validatedButtonsConfig);
+      if (errors.length > 0) {
+        yield put(throwConfigurationError(id, { message: errors }));
+      } else {
+        yield put(configureToolbar(id, validatedButtonsConfig));
+      }
     } else {
-      yield put(configureToolbar(validatedButtonsConfig));
+      yield put(configureToolbar(id, { ...defaultButtonsConfig, configured: true }));
     }
-  } else {
-    yield put(configureToolbar({ ...defaultButtonsConfig, configured: true }));
   }
 }
 

@@ -2,16 +2,11 @@ import expect from 'expect';
 import editorReducer, { handlers } from './editorReducer';
 import immutable from 'seamless-immutable';
 import Types from '../actions/types';
-import { EditorState } from 'draft-js';
 
 describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
   describe('Setup', ()=>{
     it('should be a function', ()=>{
       expect(editorReducer).toNotBeAn('Function');
-    });
-    it('should return draft-js EditorState for editorState prop', ()=>{
-      expect(editorReducer()).toIncludeKey('editorState');
-      expect(editorReducer().editorState.constructor).toBe(EditorState);
     });
     it('all handler types are defined', ()=> {
       expect(Object.keys(handlers).includes('undefined')).toNotExist("there are undefined handler types");
@@ -28,9 +23,10 @@ describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
       const newState = {
         editorState: immutable({
           test: true
-        })
+        }),
+        id: 1
       };
-      expect(editorReducer(INITIAL_STATE, { type: Types.EDITOR_CHANGE_STATE, ...newState })).toEqual({ editorState: { test: true } });
+      expect(editorReducer(INITIAL_STATE, { type: Types.EDITOR_CHANGE_STATE, ...newState })).toEqual({ 1: { editorState: { test: true } } });
     });
   });
   describe('"EDITOR_TRANSFORM_TO_RAW_STATE" action', ()=> {
@@ -43,9 +39,10 @@ describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
       const newState = {
         json: {
           test: true
-        }
+        },
+        id: 1
       };
-      expect(editorReducer(INITIAL_STATE, { type: Types.EDITOR_TRANSFORM_TO_RAW_STATE, ...newState })).toEqual({ json: { test: true } });
+      expect(editorReducer(INITIAL_STATE, { type: Types.EDITOR_TRANSFORM_TO_RAW_STATE, ...newState })).toEqual({ 1: { json: { test: true } } });
     });
   });
   describe('"CONFIGURE_TOOLBAR" action', ()=> {
@@ -58,9 +55,57 @@ describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
       const newState = {
         buttonsConfig: {
           buttonsList: ['LINK']
-        }
+        },
+        id: 1
       };
-      expect(editorReducer(INITIAL_STATE, { type: Types.CONFIGURE_TOOLBAR, ...newState })).toEqual({ buttonsConfig: { buttonsList: ['LINK'] } });
+      expect(editorReducer(INITIAL_STATE, { type: Types.CONFIGURE_TOOLBAR, ...newState })).toEqual({ 1: { buttonsConfig: { buttonsList: ['LINK'] } } });
+    });
+  });
+
+  describe('"CONFIGURE_EDITOR_API" action', ()=> {
+    let INITIAL_STATE;
+    beforeEach(()=>{
+      INITIAL_STATE = immutable({});
+    });
+
+    it('should update editor "subscribers" key', () => {
+      const newState = {
+        subscribers: {
+          api: () => {}
+        },
+        id: 1
+      };
+      expect(editorReducer(INITIAL_STATE, { type: Types.CONFIGURE_EDITOR_API, ...newState })).toEqual({ 1: { subscribers: { api: ()=>{} } } });
+    });
+  });
+
+  describe('"UPDATE_WORD_COUNT" action', ()=> {
+    let INITIAL_STATE;
+    beforeEach(()=>{
+      INITIAL_STATE = immutable({});
+    });
+
+    it('should update editor "wordCount" key', () => {
+      const newState = {
+        wordCount: 20,
+        id: 1
+      };
+      expect(editorReducer(INITIAL_STATE, { type: Types.UPDATE_WORD_COUNT, ...newState })).toEqual({ 1: { wordCount: 20 } });
+    });
+  });
+
+  describe('"UPDATE_CHAR_COUNT" action', ()=> {
+    let INITIAL_STATE;
+    beforeEach(()=>{
+      INITIAL_STATE = immutable({});
+    });
+
+    it('should update editor "json" key', () => {
+      const newState = {
+        charCount: 20,
+        id: 1
+      };
+      expect(editorReducer(INITIAL_STATE, { type: Types.UPDATE_CHAR_COUNT, ...newState })).toEqual({ 1: { charCount: 20 } });
     });
   });
 });

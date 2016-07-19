@@ -1,6 +1,6 @@
 {
-  "name": "stewie",
-  "version": "0.0.1",
+  "name": "stewie-editor",
+  "version": "0.1.0",
   "description": "Stewie is a structured wysiwyg based on DraftJS and draftjs-plugin-editor",
   "main": "lib/bundle.js",
   "scripts": {
@@ -83,7 +83,8 @@
     "redux-saga": "^0.10.5",
     "reduxsauce": "^0.1.0",
     "save-dev": "^2.0.0",
-    "seamless-immutable": "^6.1.1"
+    "seamless-immutable": "^6.1.1",
+    "uniqid": "^3.1.0"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.0",

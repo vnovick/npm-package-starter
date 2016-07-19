@@ -29,6 +29,6 @@ describe('(index_test.js) -- Test Basic Setup', ()=>{
       expect(wrapper.props().store).toEqual(appStore);
     });
   });
-})
+});
 
 

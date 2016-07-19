@@ -25,7 +25,7 @@ const settings = {
     entry: [
       'webpack-dev-server/client?http://localhost:8080',
       'babel-polyfill',
-      './examples/index.js',
+      './examples/basic/index.js',
     ],
     output: {
       publicPath: 'public/assets',
@@ -48,14 +48,14 @@ const settings = {
     output: {
       publicPath: 'lib',
       path: './lib',
-      filename: 'bundle.js'
+      filename: 'StewieEditor.js'
     }
   }
 };
 
 const commonPlugins = [
   new webpack.NamedModulesPlugin(),
-  new ExtractTextPlugin("styles.css"),
+  new ExtractTextPlugin("StewieEditor.css"),
   new webpack.EnvironmentPlugin(['NODE_ENV'])
 ];
 

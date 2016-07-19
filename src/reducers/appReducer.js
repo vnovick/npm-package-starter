@@ -6,10 +6,7 @@ const INITIAL_STATE = immutable({
   init: false
 });
 
-
-// const editorState = EditorState.createEmpty();
-
-const setState = (state, action) => {
+export const setState = (state, action) => {
   return state.merge({ init: action.init });
 };
 

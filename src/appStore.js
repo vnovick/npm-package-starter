@@ -9,7 +9,7 @@ import sagas from './sagas';
 const w = global.window || { devToolsExtension: false };
 
 // silence these saga-based messages
-const SAGA_LOGGING_BLACKLIST = ['UPDATE_WORD_COUNT', 'UPDATE_CHAR_COUNT', 'EDITOR_CHANGE_STATE'];
+const SAGA_LOGGING_BLACKLIST = [];
 
 // Configure logger
 const { config, predicate } = loggerSettings;

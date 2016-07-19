@@ -8,7 +8,6 @@ describe('(reducers/index_test.js) - root Reducer test', ()=>{
     });
     it('should include all relevant reducer state keys', ()=>{
       expect(rootReducer()).toIncludeKeys([
-        'app',
         'editor'
       ]);
     });

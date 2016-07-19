@@ -17,11 +17,14 @@ const expectedValues = {
 };
 
 const reduxConnectionMock = {
+  id: 'id',
   editor: {
     editorState: EditorState.createEmpty(),
-  },
-  app: {
-    init: true
+    init: true,
+    linkAccordion: {
+      showLinkAccordion: false,
+      urlValue: true
+    }
   }
 };
 
@@ -37,12 +40,6 @@ const testConfig = {
   get realComponent(){
     return mount(<StewieEditor { ...this.actions } { ...reduxConnectionMock }/>);
   },
-  get connectedComponent(){
-    return shallow(<StewieEditorComponent store={ appStore }/>).find(StewieEditor);
-  },
-  get realConnectedComponent(){
-    return mount(<StewieEditorComponent { ...this.actions } store={ appStore }/>).find(StewieEditor);
-  }
 };
 
 describe('(components/StewieEditor/StewieEditor_test.js) - StewieEditor test', ()=>{
@@ -113,23 +110,49 @@ describe('(components/StewieEditor/StewieEditor_test.js) - StewieEditor test', (
     });
 
     describe('Check react-redux bindings', ()=>{
-      it('check container wrapper for relevant actions and statekey', ()=>{
-        const { stateKey, actions, connectedComponent } = testConfig;
-        const componentProps = connectedComponent.props();
-        const propsToCheck = {
-          stateKey: connectedComponent.props()[stateKey],
-          actions: Object.keys(actions).filter((action)=>{
-            return typeof componentProps[action] === 'function';
-          })
-        };
-        expect(propsToCheck.stateKey).toExist();
-        expect(propsToCheck.actions.length).toEqual(Object.keys(actions).length);
-      });
       it('should call "changeState" action on state change', ()=>{
         const changeStateAction = expect.createSpy();
         const stewieWrapper = shallow(<StewieEditor changeState={ changeStateAction } { ...reduxConnectionMock }/>);
         stewieWrapper.find(Editor).simulate('change', 'test text');
         expect(testConfig.actions.changeState).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('StewieEditor auxilary methods', ()=>{
+    describe('LinkAccordion related', ()=>{
+      it('showLinkAccordion should exist in state', ()=>{
+        const { realComponent: realEditor } = testConfig;
+        expect(realEditor.state()).toIncludeKey('showLinkAccordion');
+      });
+      it('urlValue prop should exist in editor.showLinkAccordion prop', () => {
+        const { realComponent: realEditor } = testConfig;
+        expect(realEditor.state()).toIncludeKey('urlValue');
+      });
+      it('renderLinkIfisInToolbar should return LinkAccordion if showLinkAccordion is true', ()=>{
+        const { realComponent: realEditor } = testConfig;
+        const LinkAccordionOutput = realEditor.instance().renderLinkIfisInToolbar(EditorState.createEmpty(), { showLinkAccordion: true, urlValue: 'test' });
+        expect(LinkAccordionOutput).toExist();
+        expect(LinkAccordionOutput.type).toEqual(LinkAccordion);
+      });
+      it('renderLinkIfisInToolbar should return false if showLinkAccordion is false', ()=>{
+        const { realComponent: realEditor } = testConfig;
+        const LinkAccordionOutput = realEditor.instance().renderLinkIfisInToolbar(EditorState.createEmpty(), { showLinkAccordion: false, urlValue: 'test' });
+        expect(LinkAccordionOutput).toBe(false);
+      });
+      it('link change state when linkChangeState is called', ()=>{
+        const { realComponent: realEditor } = testConfig;
+        realEditor.instance().linkChangeState({ showLinkAccordion: true, urlValue: 'test' });
+        expect(realEditor.state()).toEqual({ showLinkAccordion: true, urlValue: 'test' });
+      });
+    });
+    describe('Toolbar related', ()=>{
+      it('should trigger changeState when toggleToolbarButton is called', ()=>{
+        const { realComponent: realEditor } = testConfig;
+        const changeStateSpy = expect.createSpy();
+        realEditor.instance().changeState = changeStateSpy;
+        realEditor.instance().toggleToolbarButton(EditorState.createEmpty());
+        expect(changeStateSpy).toHaveBeenCalled();
       });
     });
   });
@@ -161,7 +184,7 @@ describe('(components/StewieEditor/StewieEditor_test.js) - StewieEditor test', (
       });
       it('handleKeyCommand method should call changeState action three times and should get correct state from RichUtils', ()=>{
         let calledStateResults = [];
-        const changeStateAction = (editorState) => {
+        const changeStateAction = (id, editorState) => {
           calledStateResults.push(editorState._immutable.inlineStyleOverride);
         };
         const stewieWrapper = shallow(<StewieEditor changeState={ changeStateAction } { ...reduxConnectionMock }/>);

@@ -9,8 +9,10 @@ import testSaga from 'redux-saga-test-plan';
 describe('(sagas/editorSaga_test.js) - test editor sagas', ()=>{
   describe('watchEditorChange saga test', ()=>{
     let saga;
+    let id;
     beforeEach(()=>{
       saga = testSaga(watchEditorChange);
+      id = 1;
     });
     it('watchEditorChange saga is not throwing exception', ()=>{
       let generator = watchEditorChange();
@@ -36,34 +38,37 @@ describe('(sagas/editorSaga_test.js) - test editor sagas', ()=>{
       saga
         .next()
         .take(Types.EDITOR_CHANGE_STATE)
-        .next({ editorState })
+        .next({ editorState, id: 1 })
         .put({
           type: Types.EDITOR_TRANSFORM_TO_RAW_STATE,
-          json: jsonState
+          json: jsonState,
+          id: 1
         });
     });
     it('watchEditorChange saga should updateWordCount', () => {
       const editorState = EditorState.createEmpty();
       saga
         .next()
-        .next({ editorState })
-        .next({ editorState })
+        .next({ editorState, id })
+        .next({ editorState, id })
         .put({
           type: Types.UPDATE_WORD_COUNT,
-          wordCount: 0
-        })
+          wordCount: 0,
+          id: 1
+        });
     });
     it('watchEditorChange saga should updateCharCount', () => {
       const editorState = EditorState.createEmpty();
       saga
         .next()
-        .next({ editorState })
-        .next({ editorState })
-        .next({ editorState })
+        .next({ editorState, id })
+        .next({ editorState, id })
+        .next({ editorState, id })
         .put({
           type: Types.UPDATE_CHAR_COUNT,
-          charCount: 0
-        })
+          charCount: 0,
+          id
+        });
     });
   });
 });

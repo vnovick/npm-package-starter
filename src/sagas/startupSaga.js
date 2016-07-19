@@ -15,35 +15,39 @@ function validateSubscribers(subscribers) {
 }
 
 export function * watchStartup() {
-  const action = yield take(Types.CONFIGURE_EDITOR);
-  if (action.config) {
-    const { initialState, subscribers } = action.config;
-    if (initialState) {
-      yield put(
-        changeState(EditorState.createWithContent(
-          convertFromRaw(action.config.initialState)
-        ))
-      );
+  while(true){
+    const action = yield take(Types.CONFIGURE_EDITOR);
+    const { id, config } = action;
+    if (config) {
+      const { initialState, subscribers } = config;
+      if (initialState) {
+        yield put(
+          changeState(id, EditorState.createWithContent(
+            convertFromRaw(initialState)
+          ))
+        );
+      }
+      if (subscribers) {
+        const { error, message } = validateSubscribers(subscribers);
+        const actionCreator = !error ? configureEditorApi.part(id, subscribers) : throwConfigurationError.part(id, message);
+        yield put(actionCreator());
+      }
     }
-    if (subscribers) {
-      const { error, message } = validateSubscribers(subscribers);
-      const actionCreator = !error ? configureEditorApi.part(subscribers) : throwConfigurationError.part(message);
-      yield put(actionCreator());
-    }
+    yield put(init(id));
+    const apiConfig = appStore.getState().editor[id] ? {
+      get rawState() {
+        return appStore.getState().editor[id].editorState;
+      },
+      get editorState() {
+        return appStore.getState().editor[id].json;
+      },
+      get wordCount() {
+        return appStore.getState().editor[id].wordCount;
+      },
+      get charCount() {
+        return appStore.getState().editor[id].charCount;
+      }
+    } : {};
+    yield put(globalApiConfig(id, apiConfig));
   }
-  yield put(init(true));
-  yield put(globalApiConfig({
-    get rawState() {
-      return appStore.getState().editor.editorState;
-    },
-    get editorState() {
-      return appStore.getState().editor.json;
-    },
-    get wordCount() {
-      return appStore.getState().editor.wordCount;
-    },
-    get charCount() {
-      return appStore.getState().editor.charCount;
-    }
-  }));
 }

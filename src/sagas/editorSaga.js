@@ -7,10 +7,10 @@ import { getWordCount, getCharCount } from '../services/counter';
 
 export function * watchEditorChange() {
   while (true){
-    let { editorState } = yield take(Types.EDITOR_CHANGE_STATE);
+    let { editorState, id } = yield take(Types.EDITOR_CHANGE_STATE);
     const jsonState = convertToRaw(editorState.getCurrentContent());
-    yield put(transformState(jsonState));
-    yield put(updateWordCount(getWordCount(editorState)));
-    yield put(updateCharCount(getCharCount(editorState)));
+    yield put(transformState(id, jsonState));
+    yield put(updateWordCount(id, getWordCount(editorState)));
+    yield put(updateCharCount(id, getCharCount(editorState)));
   }
 }
