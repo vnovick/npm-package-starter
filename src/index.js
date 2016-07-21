@@ -35,7 +35,7 @@ class EditorPublic extends React.Component {
   }
 }
 
-export const EditorFactory = (selector, config) => ({
+const EditorFactory = (selector, config) => ({
   mount: () => {
     const configArray = config.constructor === Array ? config : [ config ];
     document.querySelectorAll(selector).forEach((node, index) => {
@@ -44,4 +44,14 @@ export const EditorFactory = (selector, config) => ({
     });
   }
 });
-export default EditorPublic;
+
+
+((globalObj, factory) => {
+  if (typeof exports === "object") {
+    // CommonJS
+    module.exports = factory();
+  } else {
+    // Browser globals
+    globalObj.StewieEditor = factory();
+  }
+})(this, () => ({ EditorPublic, EditorFactory }));
