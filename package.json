@@ -1,6 +1,6 @@
 {
   "name": "stewie-editor",
-  "version": "0.0.1",
+  "version": "0.0.12",
   "description": "Stewie is a structured wysiwyg based on DraftJS and draftjs-plugin-editor",
   "main": "lib/StewieEditor.js",
   "scripts": {
