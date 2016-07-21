@@ -1,7 +1,7 @@
 import 'babel-polyfill';
 import expect from 'expect';
 import jsdom from 'mocha-jsdom';
-import Editor from '.';
+import { EditorPublic as Editor } from '.';
 import appStore from './appStore';
 import { shallow } from 'enzyme';
 import React from 'react';
