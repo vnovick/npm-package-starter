@@ -7,7 +7,6 @@
     "start": "npm run start-dev",
     "start-dev": "better-npm-run watch-client",
     "compile": "better-npm-run compile",
-    "prepublish": "npm run deploy",
     "deploy": "NODE_ENV=production webpack --config ./src/build_config/webpack.config.js",
     "test": "better-npm-run compile-test",
     "test-full": "better-npm-run compile-test-full",
