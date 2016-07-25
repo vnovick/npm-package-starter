@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
-import 'core-js';
 import styles from './StewieEditor.scss';
-import Editor from 'draft-js-plugins-editor-wysiwyg';
-import { RichUtils, DefaultDraftBlockRenderMap, Entity, Modifier, SelectionState, EditorState, contentBlock } from 'draft-js';
+import { Editor, RichUtils, DefaultDraftBlockRenderMap, Entity } from 'draft-js';
 import autoBind from 'react-autobind';
 import { connect } from 'react-redux';
-import { changeState, configureToolbar, setEditor } from '../../actions/creators';
+import { changeState, configureToolbar } from '../../actions/creators';
 import Toolbar from '../Toolbar';
-import { LinkAccordion, linkPlugin } from '../Link';
+import { LinkAccordion } from '../Link';
 
 
 export const stewieClassNames = styles;
 
 
-export function customBlockRender(block, { getEditorState, setEditorState }) {
+export function customBlockRender(block) {
   const type = block.getType();
   if (type === 'hr') {
     return {
@@ -36,10 +34,6 @@ export const blockStyleFn = block =>{
 export const blockRenderMap = DefaultDraftBlockRenderMap.merge({
   hr: {}
 });
-
-export const plugins = [
-  linkPlugin()
-];
 
 export class StewieEditor extends Component {
 
@@ -134,7 +128,6 @@ export class StewieEditor extends Component {
                    onChange={ this.changeState }
                    handleKeyCommand={ this.handleKeyCommand }
                    ref="editor"
-                   plugins={ plugins }
                  />
              </div> ]
              : false

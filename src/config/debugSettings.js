@@ -1,12 +1,15 @@
-import R from 'ramda';
+import { queryString } from '../utils/queryString';
+
+export const isDev = process.env.NODE_ENV === 'development';
+
 
 export const loggerSettings = {
-  enable: true,
-  predicate: (blacklist) => (getState, { type }) => loggerSettings.enable && R.not(R.contains(type, blacklist)),
+  enable: queryString.logActions || isDev,
+  predicate: (blacklist) => (getState, { type }) => loggerSettings.enable && !(blacklist.includes(type)),
   config: {
     collapsed: true,
     duration: true,
     timestamp: true
   }
 };
-export const isDev = process.env.NODE_ENV === 'development';
+

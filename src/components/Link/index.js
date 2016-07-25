@@ -91,9 +91,7 @@ export const Link = (props) => {
 
 export const linkPlugin = (config = {}) => {
   return {
-    decorators: [{
-      strategy: findLinkEntities,
-      component: Link
-    }]
+    strategy: findLinkEntities,
+    component: Link
   };
 };

@@ -1,7 +1,4 @@
-// A list of all actions in the system.
-import { createTypes } from 'reduxsauce';
-
-export default createTypes(`
+const actionTypes = `
   CONFIGURE_EDITOR
   CONFIGURE_EDITOR_API
   GLOBAL_API_CONFIG
@@ -12,5 +9,14 @@ export default createTypes(`
   CONFIGURE_TOOLBAR
   UPDATE_WORD_COUNT
   UPDATE_CHAR_COUNT
-`);
+`;
+
+
+const createTypes = (types)=> types.split('\n').reduce((acc, actionType) => {
+  const type = actionType.trim();
+  return type.length ? { ...acc, [type]: type } : acc;
+});
+
+
+export default createTypes(actionTypes);
 

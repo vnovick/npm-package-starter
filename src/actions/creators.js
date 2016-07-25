@@ -1,9 +1,10 @@
 import Types from './types';
 
-export const startup = (config, id) => ({
+export const startup = (config, id, plugins) => ({
   type: Types.CONFIGURE_EDITOR,
   config,
-  id
+  id,
+  plugins
 });
 
 export const changeState = (id, editorState, subscribers) => ({

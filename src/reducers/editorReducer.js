@@ -1,8 +1,5 @@
-// import { EditorState } from 'draft-js';
-import { createReducer } from 'reduxsauce';
 import Types from '../actions/types';
-import { EditorState } from 'draft-js';
-import 'core-js';
+import { EditorState, CompositeDecorator } from 'draft-js';
 
 const INITIAL_STATE = {};
 
@@ -67,11 +64,13 @@ const updateCharCount = (state, { charCount, id }) => {
   };
 };
 
-const setEditor = (state, { id }) => {
+const setEditor = (state, { id, plugins }) => {
+  const customPlugins = new CompositeDecorator(plugins);
+  const editorState = EditorState.createEmpty(customPlugins);
   return {
     ...state,
     [id]: {
-      editorState: EditorState.createEmpty(),
+      editorState,
       linkAccordion: {
         showLinkAccordion: false,
         urlValue: ''
@@ -101,4 +100,10 @@ export const handlers = {
   [Types.UPDATE_CHAR_COUNT]: updateCharCount
 };
 
-export default createReducer(INITIAL_STATE, handlers);
+export default function editorReducer(state = INITIAL_STATE, action) {
+  if (action && action.type) {
+    const { type } = action;
+    return Object.keys(handlers).includes(type) ? handlers[type](state, action) : state;
+  }
+  return state;
+}

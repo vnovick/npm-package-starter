@@ -2,13 +2,13 @@ import 'babel-polyfill';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import expect from 'expect';
-import StewieEditorComponent, { StewieEditor, stewieClassNames, blockRenderMap, blockStyleFn } from '.';
-import Editor from 'draft-js-plugins-editor-wysiwyg';
+import { StewieEditor, stewieClassNames, blockRenderMap, blockStyleFn } from '.';
 import { OrderedSet } from 'immutable';
-import appStore from '../../appStore';
-import { EditorState } from 'draft-js';
+import { Editor, EditorState, CompositeDecorator } from 'draft-js';
 import Toolbar from '../Toolbar';
-import { LinkAccordion } from '../Link';
+import { LinkAccordion, linkPlugin } from '../Link';
+
+const editorStateMock = EditorState.createEmpty(new CompositeDecorator([linkPlugin()]));
 
 const expectedValues = {
   rendering: {
@@ -19,7 +19,7 @@ const expectedValues = {
 const reduxConnectionMock = {
   id: 'id',
   editor: {
-    editorState: EditorState.createEmpty(),
+    editorState: editorStateMock,
     init: true,
     linkAccordion: {
       showLinkAccordion: false,
@@ -100,13 +100,13 @@ describe('(components/StewieEditor/StewieEditor_test.js) - StewieEditor test', (
       expect(blockRenderMap.get('hr')).toExist();
     });
 
-    it('should contain draft-js-plugins-editor-wysiwyg Editor component', ()=> {
+    it('should contain draft-js Editor component', ()=> {
       expect(wrapper.find(Editor).length).toBe(1, "Editor component should be rendered inside StewieEditor");
     });
 
-    it('should have plugins prop on draft-js editor with correct length', ()=>{
-      expect(wrapper.find(Editor).props().plugins).toExist();
-      expect(wrapper.find(Editor).props().plugins.length).toBe(1);
+    it('should have decorators on draft-js editorState with correct length', ()=>{
+      expect(wrapper.find(Editor).props().editorState._immutable.decorator._decorators).toExist();
+      expect(wrapper.find(Editor).props().editorState._immutable.decorator._decorators.length).toBe(1);
     });
 
     describe('Check react-redux bindings', ()=>{
@@ -114,7 +114,7 @@ describe('(components/StewieEditor/StewieEditor_test.js) - StewieEditor test', (
         const changeStateAction = expect.createSpy();
         const stewieWrapper = shallow(<StewieEditor changeState={ changeStateAction } { ...reduxConnectionMock }/>);
         stewieWrapper.find(Editor).simulate('change', 'test text');
-        expect(testConfig.actions.changeState).toHaveBeenCalled();
+        expect(changeStateAction).toHaveBeenCalled();
       });
     });
   });

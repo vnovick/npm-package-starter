@@ -2,12 +2,14 @@ import 'babel-polyfill';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import expect from 'expect';
-import { EditorState, Entity, RichUtils, convertFromRaw } from 'draft-js';
+import { EditorState, Entity, RichUtils, convertFromRaw, CompositeDecorator } from 'draft-js';
 import { LinkAccordion, linkPlugin, Link, findLinkEntities, linkClassNames } from './index';
+
+const editorStateMock = EditorState.createEmpty(new CompositeDecorator([linkPlugin()]))
 const testConfig = {
   getComponent: (editorFocusSpy, linkState, changeState) => {
     return <LinkAccordion
-      editorFocus={ editorFocusSpy } editorState={ EditorState.createEmpty() }
+      editorFocus={ editorFocusSpy } editorState={ editorStateMock }
       urlValue={ linkState.urlValue }
       changeState={ changeState }
            />;
@@ -51,7 +53,7 @@ describe('(components/Link/Link_test.js) - LinkAccordion test', ()=>{
       const onConfirmSpy = expect.createSpy();
       const state = { showLinkAccordion: true, urlValue: 'test' };
       const changeState = expect.createSpy();
-      const editorState = EditorState.createEmpty();
+      const editorState = editorStateMock;
       const entityKey = Entity.create('LINK', 'MUTABLE', { url: '' });
       const selection = editorState.getSelection();
       const toggledLinkState = RichUtils.toggleLink(editorState, selection, entityKey);
@@ -99,14 +101,15 @@ describe('(components/Link/Link_test.js) - LinkAccordion test', ()=>{
         expect(linkPlugin).toExist();
         expect(linkPlugin).toBeA(Function);
       });
-      it('plugin should export and object with decorators key', ()=>{
+      it('plugin should export and object with strategy and component keys', ()=>{
         expect(plugin).toBeA(Object);
-        expect(linkPlugin().decorators).toExist();
+        expect(linkPlugin().strategy).toExist();
+        expect(linkPlugin().component).toExist();
       });
     });
     describe('findLinkEntities strategy Test', ()=>{
       it('strategy should be defined and it should be a function', ()=>{
-        const linkStrategy = plugin.decorators[0].strategy;
+        const linkStrategy = plugin.strategy;
         expect(linkStrategy).toExist();
         expect(linkStrategy).toBeA(Function);
       });

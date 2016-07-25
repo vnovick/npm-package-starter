@@ -1,7 +1,6 @@
-import 'core-js';
 import React from 'react';
 import styles from './toolbar.scss';
-import addBlock from 'draft-js-dnd-plugin/lib/modifiers/addBlock.js';
+import addBlock from './utils/addBlock.js';
 import { RichUtils, EditorState, Entity, SelectionState } from 'draft-js';
 import autoBind from 'react-autobind';
 import { Button } from '../Button';

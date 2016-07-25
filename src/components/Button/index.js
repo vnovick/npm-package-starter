@@ -1,5 +1,4 @@
 import React from 'react';
-import 'core-js';
 import styles from './button.scss';
 
 export const buttonClassNames = styles;

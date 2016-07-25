@@ -30,7 +30,7 @@ const settings = {
     output: {
       publicPath: 'public/assets',
       path: './public/assets',
-      filename: 'bundle.js',
+      filename: 'StewieEditor.js',
     },
     devServer: {
       contentBase: "public",
@@ -48,23 +48,70 @@ const settings = {
     output: {
       publicPath: 'lib',
       path: './lib',
+      libraryTarget: 'umd',
+      library: 'StewieEditor',
       filename: 'StewieEditor.js'
-    }
+    },
+    devtool: "source-map"
+  },
+  test: {
+    entry: [
+      'babel-polyfill',
+      './src/index.js'
+    ],
+    output: {
+      publicPath: 'lib',
+      path: './lib',
+      filename: 'StewieEditor.js'
+    },
+    devtool: null
   }
 };
 
+
 const commonPlugins = [
-  new webpack.NamedModulesPlugin(),
-  new ExtractTextPlugin("StewieEditor.css"),
-  new webpack.EnvironmentPlugin(['NODE_ENV'])
+  new ExtractTextPlugin("StewieEditor.css")
 ];
 
 const plugins = {
   development: [
     new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin(),
+    new webpack.EnvironmentPlugin(['NODE_ENV']),
     ...commonPlugins
   ],
-  production: commonPlugins
+  test: [
+    ...commonPlugins
+  ],
+  production: [
+    ...commonPlugins,
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        loops: true,
+        unused: true,
+        cascade: true,
+        evaluate: true,
+        booleans: true,
+        warnings: false,
+        join_vars: true,
+        if_return: true,
+        screw_ie8: true,
+        properties: true,
+        comparisons: true,
+        keep_fnames: true,
+        conditionals: true,
+        collapse_vars: true,
+      },
+      mangle: {
+        toplevel: true,
+        screw_ie8: true,
+        keep_fnames: true,
+      },
+      minimize: true,
+      comments: /@preserve/,
+    })
+  ]
 };
 
 

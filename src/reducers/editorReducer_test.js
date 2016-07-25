@@ -1,6 +1,5 @@
 import expect from 'expect';
 import editorReducer, { handlers } from './editorReducer';
-import immutable from 'seamless-immutable';
 import Types from '../actions/types';
 
 describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
@@ -16,14 +15,14 @@ describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
   describe('"EDITOR_CHANGE_STATE" action', ()=> {
     let INITIAL_STATE;
     beforeEach(()=>{
-      INITIAL_STATE = immutable({});
+      INITIAL_STATE = {};
     });
 
     it('should update editor "editorState" key', () => {
       const newState = {
-        editorState: immutable({
+        editorState: {
           test: true
-        }),
+        },
         id: 1
       };
       expect(editorReducer(INITIAL_STATE, { type: Types.EDITOR_CHANGE_STATE, ...newState })).toEqual({ 1: { editorState: { test: true } } });
@@ -32,7 +31,7 @@ describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
   describe('"EDITOR_TRANSFORM_TO_RAW_STATE" action', ()=> {
     let INITIAL_STATE;
     beforeEach(()=>{
-      INITIAL_STATE = immutable({});
+      INITIAL_STATE = {};
     });
 
     it('should update editor "json" key', () => {
@@ -48,7 +47,7 @@ describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
   describe('"CONFIGURE_TOOLBAR" action', ()=> {
     let INITIAL_STATE;
     beforeEach(()=>{
-      INITIAL_STATE = immutable({});
+      INITIAL_STATE = {};
     });
 
     it('should update editor "json" key', () => {
@@ -65,7 +64,7 @@ describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
   describe('"CONFIGURE_EDITOR_API" action', ()=> {
     let INITIAL_STATE;
     beforeEach(()=>{
-      INITIAL_STATE = immutable({});
+      INITIAL_STATE = {};
     });
 
     it('should update editor "subscribers" key', () => {
@@ -82,7 +81,7 @@ describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
   describe('"UPDATE_WORD_COUNT" action', ()=> {
     let INITIAL_STATE;
     beforeEach(()=>{
-      INITIAL_STATE = immutable({});
+      INITIAL_STATE = {};
     });
 
     it('should update editor "wordCount" key', () => {
@@ -97,7 +96,7 @@ describe('(reducers/editorReducer_test.js) - editorReducer test', ()=>{
   describe('"UPDATE_CHAR_COUNT" action', ()=> {
     let INITIAL_STATE;
     beforeEach(()=>{
-      INITIAL_STATE = immutable({});
+      INITIAL_STATE = {};
     });
 
     it('should update editor "json" key', () => {

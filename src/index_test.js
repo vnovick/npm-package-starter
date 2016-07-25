@@ -1,12 +1,10 @@
 import 'babel-polyfill';
 import expect from 'expect';
-import jsdom from 'mocha-jsdom';
 import { EditorPublic as Editor } from '.';
 import appStore from './appStore';
 import { shallow } from 'enzyme';
 import React from 'react';
 
-jsdom();
 describe('(index_test.js) -- Test Basic Setup', ()=>{
   describe('Test environment is up', ()=> {
     it('jsDom defined with correct document', () => {

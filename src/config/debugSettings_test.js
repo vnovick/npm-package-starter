@@ -12,7 +12,7 @@ describe('(config/debugSettings_test.js) - debugSettings test', ()=>{
     expect(loggerSettings.predicate).toBeA(Function);
   });
   it('enable should be a boolean', ()=>{
-    expect(loggerSettings.enable).toEqual(true);
+    expect(loggerSettings.enable).toEqual(false);
   });
   it('config should be an object', ()=>{
     expect(loggerSettings.config).toBeA(Object);

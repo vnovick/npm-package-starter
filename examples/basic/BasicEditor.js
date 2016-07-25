@@ -15,7 +15,7 @@ function getEditor(showMockedInitialState, addSubscribers){
   return <Editor { ...props }/>;
 }
 export default () => (
-  <div class="basic-editor">
+  <div className="basic-editor">
     <h1>Basic Editor</h1>
     { getEditor(false, true) }
   </div>

@@ -1,8 +1,8 @@
 // process CONFIGURE_EDITOR actions
 import { take, put } from 'redux-saga/effects';
 import Types from '../actions/types';
-import { changeState, configureEditorApi, init, throwConfigurationError, configureToolbar, globalApiConfig } from '../actions/creators';
-import { EditorState, convertFromRaw } from 'draft-js';
+import { changeState, configureEditorApi, init, throwConfigurationError, globalApiConfig } from '../actions/creators';
+import { EditorState, convertFromRaw, CompositeDecorator } from 'draft-js';
 import appStore from '../appStore';
 export let covertedState = {};
 
@@ -17,19 +17,20 @@ function validateSubscribers(subscribers) {
 export function * watchStartup() {
   while(true){
     const action = yield take(Types.CONFIGURE_EDITOR);
-    const { id, config } = action;
+    const { id, config, plugins } = action;
     if (config) {
       const { initialState, subscribers } = config;
       if (initialState) {
         yield put(
           changeState(id, EditorState.createWithContent(
-            convertFromRaw(initialState)
+            convertFromRaw(initialState),
+            new CompositeDecorator(plugins)
           ))
         );
       }
       if (subscribers) {
         const { error, message } = validateSubscribers(subscribers);
-        const actionCreator = !error ? configureEditorApi.part(id, subscribers) : throwConfigurationError.part(id, message);
+        const actionCreator = !error ? configureEditorApi.bind(null, id, subscribers) : throwConfigurationError.bind(null, id, message);
         yield put(actionCreator());
       }
     }
