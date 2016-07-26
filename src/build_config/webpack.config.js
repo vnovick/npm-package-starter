@@ -5,7 +5,6 @@ var postcssMergeRules = require('postcss-merge-rules');
 var postcssMergeLonghands = require('postcss-merge-longhand');
 var postcssMergeIdents = require('postcss-merge-idents');
 var cssMqPacker = require('css-mqpacker');
-var postcssSvgGo = require('postcss-svgo');
 
 
 const autoprefix = {
@@ -165,7 +164,6 @@ module.exports = Object.assign({
     postcssMergeLonghands,
     postcssMergeIdents,
     cssMqPacker,
-    postcssSvgGo,
   ],
   plugins: plugins[process.env.NODE_ENV]
 }, settings[process.env.NODE_ENV]);
