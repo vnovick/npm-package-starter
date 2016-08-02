@@ -112,7 +112,7 @@ export class StewieEditor extends Component {
     if (this.props.editor){
       const { editor: { buttonsConfig, editorState, init } } = this.props;
       return (
-        <div className={ stewieClassNames.container }>
+        <div className={ stewieClassNames.container } onClick={ ()=>{ this.refs.editor.focus(); } }>
           { init ? [
             <Toolbar key="toolbar" linkToggle={ this.linkChangeState }
               onToggle={ this.toggleToolbarButton }

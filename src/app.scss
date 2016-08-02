@@ -1,2 +1,6 @@
 @import "common_styles/colors";
 @import '~draft-js/dist/Draft';
+
+.public-DraftEditor-content > div[data-contents="true"] {
+  overflow: visible;
+}
