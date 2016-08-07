@@ -29,7 +29,7 @@ const settings = {
     output: {
       publicPath: 'public/assets',
       path: './public/assets',
-      filename: 'StewieEditor.js',
+      filename: 'myPackage.js',
     },
     devServer: {
       contentBase: "public",
@@ -48,8 +48,8 @@ const settings = {
       publicPath: 'lib',
       path: './lib',
       libraryTarget: 'umd',
-      library: 'StewieEditor',
-      filename: 'StewieEditor.js'
+      library: 'myPackage',
+      filename: 'myPackage.js'
     },
     devtool: "source-map"
   },
@@ -61,7 +61,7 @@ const settings = {
     output: {
       publicPath: 'lib',
       path: './lib',
-      filename: 'StewieEditor.js'
+      filename: 'myPackage.js'
     },
     devtool: null
   }
@@ -69,7 +69,7 @@ const settings = {
 
 
 const commonPlugins = [
-  new ExtractTextPlugin("StewieEditor.css")
+  new ExtractTextPlugin("myPackage.css")
 ];
 
 const plugins = {

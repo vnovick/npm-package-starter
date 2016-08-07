@@ -1,9 +1,9 @@
 import 'babel-polyfill';
 import expect from 'expect';
-import { EditorPublic as Editor } from '.';
-import appStore from './appStore';
-import { shallow } from 'enzyme';
-import React from 'react';
+import { myPackage } from '.';
+import jsdom from 'mocha-jsdom';
+
+jsdom();
 
 describe('(index_test.js) -- Test Basic Setup', ()=>{
   describe('Test environment is up', ()=> {
@@ -11,20 +11,8 @@ describe('(index_test.js) -- Test Basic Setup', ()=>{
       var div = document.createElement('div');
       expect(div.nodeName).toBe('DIV');
     });
-    it('Public Editor component is imported correctly', () => {
-      expect(Editor).toExist();
-    });
-  });
-  describe('Basic Public Editor setup', ()=>{
-    let wrapper;
-    beforeEach(()=>{
-      wrapper = shallow(<Editor/>);
-    });
-    it('Stewie Editor is exposed and wrapped in Provider', ()=>{
-      expect(wrapper.name()).toEqual('Provider');
-    });
-    it('Provider wrapper gets correct appStore', ()=>{
-      expect(wrapper.props().store).toEqual(appStore);
+    it('myPackage component is imported correctly', () => {
+      expect(myPackage).toExist();
     });
   });
 });

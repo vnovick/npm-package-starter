@@ -1,8 +1,23 @@
-![Stewie](http://static.comicvine.com/uploads/original/5/57746/1959196-stewie_by_111blur111.png "Stewie")
+# Modern npm package starter
 
-# Stewie
-Stewie is a Structured Wysiwyg Editor based on DraftJS and draftjs-plugin-editor packages
+## Installation:
+```
+npm install
 
+```
 
-## installation
- - `npm install`
+## Usage
+
+Make sure to override myPackage.js to your meaningfull package name.
+
+* Tests are dependant on mocha. to run tests try one of the following
+ ```
+  npm run test
+  npm run test-full
+ ```
+
+* Deploy can be executed separately
+  ```
+  npm run deploy
+
+  ```
